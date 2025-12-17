@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neon Time | Clock</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Courier New', Courier, monospace;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #0ff;
+      overflow: hidden;
+    }
+
+    .clock {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .digit {
+      width: 4rem;
+      height: 6rem;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 0.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 4rem;
+      color: #0ff;
+      text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;
+      transition: transform 0.3s ease;
+    }
+
+    .flip {
+      transform: rotateX(180deg);
+    }
+
+    .colon {
+      font-size: 4rem;
+      display: flex;
+      align-items: center;
+      text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 2rem;
+      text-align: center;
+      font-size: clamp(0.8rem, 2vw, 1.2rem);
+      color: #0ff;
+      text-shadow: 0 0 5px #0ff;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    @media(max-width:500px) {
+      .digit {
+        width: 3rem;
+        height: 4.5rem;
+        font-size: 3rem;
+      }
+
+      .colon {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="clock">
+    <div class="digit" id="h1">0</div>
+    <div class="digit" id="h2">0</div>
+    <div class="colon">:</div>
+    <div class="digit" id="m1">0</div>
+    <div class="digit" id="m2">0</div>
+    <div class="colon">:</div>
+    <div class="digit" id="s1">0</div>
+    <div class="digit" id="s2">0</div>
+  </div>
+
+  <footer>Stephen Abueva | <span id="year"></span></footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const digits = ['h1', 'h2', 'm1', 'm2', 's1', 's2'].map(id => document.getElementById(id));
+    let prev = ['0', '0', '0', '0', '0', '0'];
+
+    function flipDigit(digit, newVal) {
+      digit.classList.add('flip');
+      setTimeout(() => {
+        digit.textContent = newVal;
+        digit.classList.remove('flip');
+      }, 150);
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const time = [
+        ...String(now.getHours()).padStart(2, '0'),
+        ...String(now.getMinutes()).padStart(2, '0'),
+        ...String(now.getSeconds()).padStart(2, '0')
+      ];
+
+      digits.forEach((digitElem, i) => {
+        if (prev[i] !== time[i]) {
+          flipDigit(digitElem, time[i]);
+          prev[i] = time[i];
+        }
+      });
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+
+</html>
