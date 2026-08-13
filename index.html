@@ -1,153 +1,219 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-  <meta charset="UTF-8">
-  <link rel="icon" href="./favicon.ico" type="image/x-icon">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neon Time | Clock</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      font-family: 'Courier New', Courier, monospace;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      color: #0ff;
-      overflow: hidden;
-      padding: 1rem;
-    }
-
-    .clock {
-      display: flex;
-      align-items: center;
-      gap: clamp(0.25rem, 1vw, 0.75rem);
-    }
-
-    .digit {
-      width: clamp(3rem, 12vw, 8rem);
-      height: clamp(4.5rem, 15vw, 10rem);
-      background: rgba(0, 0, 0, 0.25);
-      border-radius: 0.5rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: clamp(3rem, 10vw, 8rem);
-      color: #0ff;
-      text-shadow:
-        0 0 5px #0ff,
-        0 0 10px #0ff,
-        0 0 20px #0ff;
-      transition: transform 0.3s ease;
-    }
-
-    .flip {
-      transform: rotateX(180deg);
-    }
-
-    .colon {
-      font-size: clamp(2.5rem, 8vw, 4rem);
-      display: flex;
-      align-items: center;
-      text-shadow:
-        0 0 5px #0ff,
-        0 0 10px #0ff;
-    }
-
-    footer {
-      position: absolute;
-      bottom: clamp(1rem, 5vh, 2rem);
-      text-align: center;
-      font-size: clamp(0.75rem, 2.5vw, 1.2rem);
-      color: #0ff;
-      text-shadow: 0 0 5px #0ff;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    /* Extra safety for very small screens */
-    @media (max-width: 360px) {
-      .clock {
-        gap: 0.2rem;
-      }
-    }
-
-    .date {
-      margin-bottom: clamp(1rem, 3vh, 2rem);
-      font-size: clamp(1rem, 4vw, 2rem);
-      text-align: center;
-      text-shadow:
-        0 0 5px #0ff,
-        0 0 10px #0ff,
-        0 0 20px #0ff;
-      letter-spacing: 0.1em;
-    }
-  </style>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
 </head>
-
 <body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#07060f;}
+  a{color:#5ee6ff;text-decoration:none}
+  a:hover{color:#b6f4ff}
+  @keyframes digA{0%{transform:translateY(-34%) rotateX(-62deg);opacity:0;filter:blur(3px)}60%{filter:blur(0)}100%{transform:none;opacity:1;filter:blur(0)}}
+  @keyframes digB{0%{transform:translateY(-34%) rotateX(-62deg);opacity:0;filter:blur(3px)}60%{filter:blur(0)}100%{transform:none;opacity:1;filter:blur(0)}}
+  @keyframes breathe{0%,100%{opacity:.55}50%{opacity:1}}
+</style>
+</helmet>
 
-  <div class="date" id="date"></div>
+<div style="position:fixed;inset:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'JetBrains Mono',ui-monospace,monospace;color:#dcfaff;background:radial-gradient(115% 85% at 50% 6%,#221f47 0%,#100e24 42%,#07060f 100%);padding:24px;">
 
-  <div class="clock">
-    <div class="digit" id="h1">0</div>
-    <div class="digit" id="h2">0</div>
-    <div class="colon">:</div>
-    <div class="digit" id="m1">0</div>
-    <div class="digit" id="m2">0</div>
-    <div class="colon">:</div>
-    <div class="digit" id="s1">0</div>
-    <div class="digit" id="s2">0</div>
+  <div style="position:absolute;inset:0;pointer-events:none;opacity:.14;background-image:repeating-linear-gradient(0deg,rgba(94,230,255,.5) 0 1px,transparent 1px 4px);mix-blend-mode:screen;"></div>
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 55% at 50% 50%,transparent 40%,rgba(4,3,10,.75) 100%);"></div>
+
+  <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:{{ stackGap }};">
+
+    <sc-if value="{{ showDate }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;gap:14px;color:#93e9f7;">
+        <span style="display:block;width:26px;height:1px;background:linear-gradient(90deg,transparent,#5ee6ff);"></span>
+        <span style="font-weight:300;text-transform:uppercase;letter-spacing:.34em;font-size:{{ dateSize }};text-shadow:0 0 12px rgba(94,230,255,.55);white-space:nowrap;">{{ dateStr }}</span>
+        <span style="display:block;width:26px;height:1px;background:linear-gradient(270deg,transparent,#5ee6ff);"></span>
+      </div>
+    </sc-if>
+
+    <div style="display:flex;align-items:flex-end;justify-content:center;flex-wrap:wrap;gap:{{ groupGap }};">
+
+      <div style="display:flex;align-items:stretch;gap:{{ gap }};">
+        <div style="{{ cardBox }}">
+          <div style="position:relative;width:100%;height:100%;display:grid;place-items:center;border-radius:16px;background:linear-gradient(180deg,rgba(94,230,255,.12),rgba(8,10,26,.72) 46%,rgba(4,5,16,.9));border:1px solid rgba(94,230,255,.22);box-shadow:0 0 0 1px rgba(0,0,0,.5) inset,0 24px 60px -30px rgba(94,230,255,.6);overflow:hidden;">
+            <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(3,4,12,.85);"></div>
+            <span style="{{ flip0 }}">{{ d0 }}</span>
+          </div>
+        </div>
+        <div style="{{ cardBox }}">
+          <div style="position:relative;width:100%;height:100%;display:grid;place-items:center;border-radius:16px;background:linear-gradient(180deg,rgba(94,230,255,.12),rgba(8,10,26,.72) 46%,rgba(4,5,16,.9));border:1px solid rgba(94,230,255,.22);box-shadow:0 0 0 1px rgba(0,0,0,.5) inset,0 24px 60px -30px rgba(94,230,255,.6);overflow:hidden;">
+            <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(3,4,12,.85);"></div>
+            <span style="{{ flip1 }}">{{ d1 }}</span>
+          </div>
+        </div>
+        <div style="{{ colonBox }}">
+          <div style="display:flex;flex-direction:column;gap:{{ dotGap }};animation:breathe 2s ease-in-out infinite;">
+            <span style="{{ dot }}"></span>
+            <span style="{{ dot }}"></span>
+          </div>
+        </div>
+        <div style="{{ cardBox }}">
+          <div style="position:relative;width:100%;height:100%;display:grid;place-items:center;border-radius:16px;background:linear-gradient(180deg,rgba(94,230,255,.12),rgba(8,10,26,.72) 46%,rgba(4,5,16,.9));border:1px solid rgba(94,230,255,.22);box-shadow:0 0 0 1px rgba(0,0,0,.5) inset,0 24px 60px -30px rgba(94,230,255,.6);overflow:hidden;">
+            <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(3,4,12,.85);"></div>
+            <span style="{{ flip2 }}">{{ d2 }}</span>
+          </div>
+        </div>
+        <div style="{{ cardBox }}">
+          <div style="position:relative;width:100%;height:100%;display:grid;place-items:center;border-radius:16px;background:linear-gradient(180deg,rgba(94,230,255,.12),rgba(8,10,26,.72) 46%,rgba(4,5,16,.9));border:1px solid rgba(94,230,255,.22);box-shadow:0 0 0 1px rgba(0,0,0,.5) inset,0 24px 60px -30px rgba(94,230,255,.6);overflow:hidden;">
+            <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(3,4,12,.85);"></div>
+            <span style="{{ flip3 }}">{{ d3 }}</span>
+          </div>
+        </div>
+      </div>
+
+      <sc-if value="{{ showSeconds }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:baseline;gap:{{ secGap }};">
+          <span style="{{ secStyle }}">{{ d4 }}</span>
+          <span style="{{ secStyle }}">{{ d5 }}</span>
+          <sc-if value="{{ meridiem }}" hint-placeholder-val="{{ false }}">
+            <span style="{{ meridiemStyle }}">{{ meridiem }}</span>
+          </sc-if>
+        </div>
+      </sc-if>
+
+    </div>
+
+    <div style="{{ trackStyle }}">
+      <div style="{{ progressStyle }}"></div>
+    </div>
+
   </div>
 
-  <footer>Stephen Abueva | <span id="year"></span></footer>
+  <footer style="position:absolute;left:0;right:0;bottom:clamp(14px,4vh,34px);text-align:center;font-weight:300;font-size:clamp(10px,1.5vw,13px);letter-spacing:.32em;text-transform:uppercase;color:rgba(147,233,247,.62);">Stephen Abueva &nbsp;|&nbsp; {{ year }}</footer>
+</div>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;use24Hour&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;showSeconds&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;showDate&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { now: new Date(), keys: [0,0,0,0,0,0], w: 1200, h: 800 };
 
-    const digits = ['h1', 'h2', 'm1', 'm2', 's1', 's2'].map(id => document.getElementById(id));
-    let prev = ['0', '0', '0', '0', '0', '0'];
-
-    function flipDigit(digit, newVal) {
-      digit.classList.add('flip');
-      setTimeout(() => {
-        digit.textContent = newVal;
-        digit.classList.remove('flip');
-      }, 150);
+  componentDidMount() {
+    this.prev = null;
+    this.measure();
+    this.ro = () => this.measure();
+    window.addEventListener('resize', this.ro);
+    window.addEventListener('orientationchange', this.ro);
+    this.timer = setInterval(() => this.tick(), 200);
+    this.tick();
+  }
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    window.removeEventListener('resize', this.ro);
+    window.removeEventListener('orientationchange', this.ro);
+  }
+  measure() {
+    this.setState({ w: window.innerWidth, h: window.innerHeight });
+  }
+  digitsFor(now) {
+    const h24 = this.props.use24Hour !== false;
+    let h = now.getHours();
+    if (!h24) { h = h % 12; if (h === 0) h = 12; }
+    return (String(h).padStart(2, '0') + String(now.getMinutes()).padStart(2, '0') + String(now.getSeconds()).padStart(2, '0')).split('');
+  }
+  tick() {
+    const now = new Date();
+    const d = this.digitsFor(now);
+    let keys = this.state.keys;
+    if (this.prev) {
+      const next = keys.slice();
+      let changed = false;
+      for (let i = 0; i < 6; i++) if (this.prev[i] !== d[i]) { next[i] = keys[i] + 1; changed = true; }
+      if (changed) keys = next;
     }
+    this.prev = d;
+    this.setState({ now, keys });
+  }
 
-    function updateClock() {
-      const now = new Date();
-      const time = [
-        ...String(now.getHours()).padStart(2, '0'),
-        ...String(now.getMinutes()).padStart(2, '0'),
-        ...String(now.getSeconds()).padStart(2, '0')
-      ];
+  renderVals() {
+    const { now, keys, w, h } = this.state;
+    const showSeconds = this.props.showSeconds !== false;
+    const showDate = this.props.showDate !== false;
+    const h24 = this.props.use24Hour !== false;
 
-      digits.forEach((digitElem, i) => {
-        if (prev[i] !== time[i]) {
-          flipDigit(digitElem, time[i]);
-          prev[i] = time[i];
-        }
-      });
+    const avail = Math.max(220, w - 48);
+    const stack = avail < 620;
+    // HH:MM block budget: 4 cards + colon(0.42) + 5 gaps(0.13 each)
+    const unitsRow = 4 + 0.42 + 5 * 0.13;
+    const secUnits = showSeconds && !stack ? 1.05 : 0;
+    const budget = avail / (unitsRow + secUnits);
+    const vertical = (h - (showDate ? 140 : 90) - (stack && showSeconds ? 90 : 0)) / 1.34;
+    const card = Math.max(38, Math.min(budget, vertical, 190));
 
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      document.getElementById('date').textContent = now.toLocaleDateString(undefined, options);
-    }
+    const d = this.digitsFor(now);
+    const cardBox = (i) => ({
+      width: card + 'px', height: Math.round(card * 1.34) + 'px',
+      fontSize: Math.round(card * 1.02) + 'px'
+    });
+    const flip = (i) => ({
+      display: 'block', fontWeight: 500, lineHeight: 1,
+      color: '#eafeff', letterSpacing: '-0.02em',
+      textShadow: '0 0 6px rgba(94,230,255,.9), 0 0 22px rgba(94,230,255,.55), 0 0 60px rgba(94,230,255,.28)',
+      animation: `dig${keys[i] % 2 ? 'A' : 'B'} 480ms cubic-bezier(.16,.84,.24,1)`,
+      transformOrigin: '50% 0%'
+    });
 
-    updateClock();
-    setInterval(updateClock, 1000);
+    const secSize = Math.round(card * (stack ? 0.44 : 0.38));
+    const secStyle = {
+      fontSize: secSize + 'px', fontWeight: 300, lineHeight: 1,
+      color: 'rgba(94,230,255,.82)', letterSpacing: '-0.01em',
+      textShadow: '0 0 14px rgba(94,230,255,.5)',
+      fontVariantNumeric: 'tabular-nums'
+    };
 
-  </script>
+    const pct = ((now.getSeconds() * 1000 + now.getMilliseconds()) / 60000) * 100;
+    const trackW = Math.round(Math.min(avail, card * (unitsRow + secUnits)));
+
+    return {
+      d0: d[0], d1: d[1], d2: d[2], d3: d[3], d4: d[4], d5: d[5],
+      flip0: flip(0), flip1: flip(1), flip2: flip(2), flip3: flip(3),
+      cardBox: cardBox(), showSeconds, showDate,
+      meridiem: h24 ? false : (now.getHours() < 12 ? 'AM' : 'PM'),
+      meridiemStyle: {
+        fontSize: Math.round(secSize * 0.6) + 'px', fontWeight: 500,
+        letterSpacing: '.18em', color: 'rgba(147,233,247,.7)', marginLeft: '6px'
+      },
+      colonBox: {
+        width: Math.round(card * 0.42) + 'px', display: 'flex',
+        alignItems: 'center', justifyContent: 'center'
+      },
+      dot: {
+        display: 'block', width: Math.round(card * 0.11) + 'px', height: Math.round(card * 0.11) + 'px',
+        borderRadius: '50%', background: '#7defff',
+        boxShadow: '0 0 10px rgba(94,230,255,.95), 0 0 28px rgba(94,230,255,.5)'
+      },
+      dotGap: Math.round(card * 0.2) + 'px',
+      gap: Math.round(card * 0.13) + 'px',
+      groupGap: Math.round(card * (stack ? 0.16 : 0.34)) + 'px',
+      secGap: Math.round(card * 0.06) + 'px',
+      stackGap: Math.round(Math.max(16, card * 0.28)) + 'px',
+      dateSize: Math.round(Math.max(9, Math.min(card * 0.155, 17))) + 'px',
+      secStyle,
+      trackStyle: {
+        width: trackW + 'px', height: '2px', borderRadius: '2px',
+        background: 'rgba(94,230,255,.13)', overflow: 'hidden'
+      },
+      progressStyle: {
+        width: pct.toFixed(2) + '%', height: '100%',
+        background: 'linear-gradient(90deg,rgba(94,230,255,.35),#7defff)',
+        boxShadow: '0 0 12px rgba(94,230,255,.8)'
+      },
+      dateStr: now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }),
+      year: now.getFullYear()
+    };
+  }
+}
+
+</script>
 </body>
-
 </html>
