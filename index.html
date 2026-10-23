@@ -727,10 +727,8 @@ class Component extends DCLogic {
       showDrawing: host.id !== MISS_MINUTES.id && this.state.photos[host.id] !== 'ok',
       photoStyle: {
         width: Math.round(mascotH * 0.8) + 'px', height: mascotH + 'px', flex: 'none',
-        borderRadius: '14px', backgroundColor: 'rgb(var(--ink))',
-        backgroundImage: `url("${photoUrl(host.id)}")`, backgroundSize: 'cover', backgroundPosition: 'center top',
-        border: `2px solid ${host.color}`,
-        boxShadow: `0 0 0 4px ${host.color}33, 0 10px 30px -10px ${host.color}`
+        borderRadius: '14px',
+        backgroundImage: `url("${photoUrl(host.id)}")`, backgroundSize: 'cover', backgroundPosition: 'center top'
       },
       portrait: { [host.id]: true },
       portraitLabel: host.name + ', ' + host.role,
