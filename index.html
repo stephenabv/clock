@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A TVA-themed flip clock with Miss Minutes, Loki, He Who Remains and the rest of the Time Variance Authority cast.">
+<title>TVA Clock</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -13,63 +15,155 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;700&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:#07060f;}
-  a{color:#5ee6ff;text-decoration:none}
-  a:hover{color:#b6f4ff}
+  html,body{margin:0;padding:0;background:#0d0703;}
+  a{color:#ffb547;text-decoration:none}
+  a:hover{color:#ffe0a8}
   @keyframes digA{0%{transform:translateY(-34%) rotateX(-62deg);opacity:0;filter:blur(3px)}60%{filter:blur(0)}100%{transform:none;opacity:1;filter:blur(0)}}
   @keyframes digB{0%{transform:translateY(-34%) rotateX(-62deg);opacity:0;filter:blur(3px)}60%{filter:blur(0)}100%{transform:none;opacity:1;filter:blur(0)}}
   @keyframes breathe{0%,100%{opacity:.55}50%{opacity:1}}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6%) rotate(2deg)}}
+  @keyframes wave{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-22deg)}}
+  @keyframes blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+  @keyframes bubbleA{0%{opacity:0;transform:translateY(6px) scale(.97)}100%{opacity:1;transform:none}}
+  @keyframes bubbleB{0%{opacity:0;transform:translateY(6px) scale(.97)}100%{opacity:1;transform:none}}
+  @keyframes nexA{0%,100%{transform:none;filter:none}15%{transform:translateX(-6px) skewX(4deg);filter:hue-rotate(-30deg) saturate(2)}30%{transform:translateX(5px) skewX(-3deg)}45%{transform:translateX(-3px);filter:hue-rotate(-30deg) saturate(2)}60%{transform:translateX(2px)}}
+  @keyframes nexB{0%,100%{transform:none;filter:none}15%{transform:translateX(-6px) skewX(4deg);filter:hue-rotate(-30deg) saturate(2)}30%{transform:translateX(5px) skewX(-3deg)}45%{transform:translateX(-3px);filter:hue-rotate(-30deg) saturate(2)}60%{transform:translateX(2px)}}
+  @keyframes drift{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-400}}
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </helmet>
 
-<div style="position:fixed;inset:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'JetBrains Mono',ui-monospace,monospace;color:#dcfaff;background:radial-gradient(115% 85% at 50% 6%,#221f47 0%,#100e24 42%,#07060f 100%);padding:24px;">
+<div style="position:fixed;inset:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'JetBrains Mono',ui-monospace,monospace;color:#ffe9c7;background:radial-gradient(115% 85% at 50% 8%,#3a2210 0%,#1d1008 45%,#0d0703 100%);padding:24px 16px;">
 
-  <div style="position:absolute;inset:0;pointer-events:none;opacity:.14;background-image:repeating-linear-gradient(0deg,rgba(94,230,255,.5) 0 1px,transparent 1px 4px);mix-blend-mode:screen;"></div>
-  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 55% at 50% 50%,transparent 40%,rgba(4,3,10,.75) 100%);"></div>
+  <!-- Branching timelines (decorative) -->
+  <svg aria-hidden="true" viewBox="0 0 1000 600" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.32;">
+    <path d="M-10 300 C200 300 300 300 500 300 S800 300 1010 300" fill="none" stroke="#ff9a1f" style="stroke-width:1.6;stroke-dasharray:6 10;animation:drift 30s linear infinite;"></path>
+    <path d="M260 300 C340 300 380 210 520 170 S820 120 1010 90" fill="none" stroke="#3fbf6a" style="stroke-width:1.1;stroke-dasharray:3 9;animation:drift 38s linear infinite;"></path>
+    <path d="M420 300 C500 300 560 380 680 420 S880 480 1010 520" fill="none" stroke="#3fbf6a" style="stroke-width:1.1;stroke-dasharray:3 9;animation:drift 34s linear infinite;"></path>
+    <path d="M610 300 C690 300 730 250 830 240 S950 230 1010 225" fill="none" stroke="#9b6cff" style="stroke-width:1;stroke-dasharray:2 8;animation:drift 42s linear infinite;"></path>
+    <path d="M140 300 C220 300 250 390 330 450 S470 560 560 610" fill="none" stroke="#ff9a1f" style="stroke-width:.9;stroke-dasharray:2 8;animation:drift 46s linear infinite;"></path>
+  </svg>
+  <div style="position:absolute;inset:0;pointer-events:none;opacity:.12;background-image:repeating-linear-gradient(0deg,rgba(255,170,70,.55) 0 1px,transparent 1px 4px);mix-blend-mode:screen;"></div>
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 60% at 50% 50%,transparent 40%,rgba(8,4,1,.8) 100%);"></div>
 
-  <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:{{ stackGap }};">
+  <!-- TVA header -->
+  <header style="position:absolute;left:0;right:0;top:clamp(12px,3vh,28px);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 16px;">
+    <svg aria-hidden="true" viewBox="0 0 64 40" style="{{ logoStyle }}">
+      <rect x="2" y="2" width="60" height="36" rx="6" fill="#2a1608" stroke="#ff9a1f" style="stroke-width:3;"></rect>
+      <path d="M10 11 H24 M17 11 V30 M27 11 L33 30 L39 11 M42 30 L48 11 L54 30 M45 23 H51" fill="none" stroke="#ffcf7a" style="stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;"></path>
+    </svg>
+    <div style="display:flex;flex-direction:column;gap:3px;">
+      <span style="{{ orgStyle }}">Time Variance Authority</span>
+      <span style="{{ mottoStyle }}">For all time. Always.</span>
+    </div>
+  </header>
+
+  <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:{{ stackGap }};max-width:100%;">
 
     <sc-if value="{{ showDate }}" hint-placeholder-val="{{ true }}">
-      <div style="display:flex;align-items:center;gap:14px;color:#93e9f7;">
-        <span style="display:block;width:26px;height:1px;background:linear-gradient(90deg,transparent,#5ee6ff);"></span>
-        <span style="font-weight:300;text-transform:uppercase;letter-spacing:.34em;font-size:{{ dateSize }};text-shadow:0 0 12px rgba(94,230,255,.55);white-space:nowrap;">{{ dateStr }}</span>
-        <span style="display:block;width:26px;height:1px;background:linear-gradient(270deg,transparent,#5ee6ff);"></span>
+      <div style="display:flex;align-items:center;gap:14px;color:#ffc979;max-width:100%;">
+        <span style="display:block;width:26px;height:1px;flex:none;background:linear-gradient(90deg,transparent,#ff9a1f);"></span>
+        <span style="font-weight:300;text-transform:uppercase;letter-spacing:.3em;font-size:{{ dateSize }};text-shadow:0 0 12px rgba(255,154,31,.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ dateStr }}</span>
+        <span style="display:block;width:26px;height:1px;flex:none;background:linear-gradient(270deg,transparent,#ff9a1f);"></span>
       </div>
     </sc-if>
 
-    <div style="display:flex;align-items:flex-end;justify-content:center;flex-wrap:wrap;gap:{{ groupGap }};">
+    <!-- Miss Minutes + speech bubble -->
+    <sc-if value="{{ showMissMinutes }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;justify-content:center;gap:{{ mmGap }};max-width:100%;">
+        <svg role="img" aria-label="Miss Minutes, the TVA's animated clock mascot" viewBox="0 0 120 150" style="{{ mmStyle }}">
+          <defs>
+            <radialGradient id="mmFace" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" style="stop-color:#ffd77e;"></stop>
+              <stop offset="70%" style="stop-color:#ffb03e;"></stop>
+              <stop offset="100%" style="stop-color:#f39a2a;"></stop>
+            </radialGradient>
+          </defs>
+          <!-- rubber-hose legs and little black shoes -->
+          <path d="M51 104 Q49 120 46 133 M69 104 Q71 120 74 133" fill="none" stroke="#1a0d05" style="stroke-width:3;stroke-linecap:round;"></path>
+          <ellipse cx="42" cy="136.5" rx="9" ry="5" fill="#1a0d05"></ellipse>
+          <ellipse cx="78" cy="136.5" rx="9" ry="5" fill="#1a0d05"></ellipse>
+          <ellipse cx="39" cy="134.5" rx="3" ry="1.4" fill="#fff" style="opacity:.55;"></ellipse>
+          <ellipse cx="75" cy="134.5" rx="3" ry="1.4" fill="#fff" style="opacity:.55;"></ellipse>
+          <!-- left arm, white-gloved hand on hip -->
+          <path d="M16 68 Q4 74 9 86" fill="none" stroke="#1a0d05" style="stroke-width:3;stroke-linecap:round;"></path>
+          <g fill="#fffdf6" stroke="#1a0d05" style="stroke-width:1.4;">
+            <circle cx="11" cy="88" r="5.6"></circle>
+            <circle cx="7" cy="92" r="2.4"></circle>
+            <circle cx="11" cy="94" r="2.4"></circle>
+            <circle cx="15" cy="92.5" r="2.4"></circle>
+          </g>
+          <!-- right arm, waving -->
+          <g style="transform-origin:104px 64px;transform-box:view-box;animation:wave 1.6s ease-in-out infinite;">
+            <path d="M104 64 Q116 56 113 42" fill="none" stroke="#1a0d05" style="stroke-width:3;stroke-linecap:round;"></path>
+            <g fill="#fffdf6" stroke="#1a0d05" style="stroke-width:1.4;">
+              <path d="M108 44 Q113 47 118 44 L117 41 Q113 43 109 41 Z"></path>
+              <circle cx="113" cy="36" r="6"></circle>
+              <circle cx="107.5" cy="31" r="2.5"></circle>
+              <circle cx="111.5" cy="28.5" r="2.5"></circle>
+              <circle cx="116" cy="29" r="2.5"></circle>
+              <circle cx="119.5" cy="33" r="2.4"></circle>
+            </g>
+          </g>
+          <!-- clock body: dark bezel, orange rim, glowing face -->
+          <circle cx="60" cy="62" r="47" fill="#c9561a" stroke="#6e2e0c" style="stroke-width:2.5;"></circle>
+          <circle cx="60" cy="62" r="43" fill="#ee8424"></circle>
+          <circle cx="60" cy="62" r="38" fill="url(#mmFace)" stroke="#b9561a" style="stroke-width:1.5;"></circle>
+          <path d="M60.0 18.5 L60.0 22.0 M103.5 62.0 L100.0 62.0 M60.0 105.5 L60.0 102.0 M16.5 62.0 L20.0 62.0" fill="none" stroke="#6e2e0c" style="stroke-width:2.6;stroke-linecap:round;"></path>
+          <!-- clock hands in the middle of her forehead tell the real time -->
+          <line x1="60" y1="42" x2="60" y2="32" stroke="#1a0d05" style="{{ hourHand }}"></line>
+          <line x1="60" y1="42" x2="60" y2="27" stroke="#1a0d05" style="{{ minuteHand }}"></line>
+          <circle cx="60" cy="42" r="2.4" fill="#1a0d05"></circle>
+          <!-- big cartoon eyes with pie-cut pupils and lashes -->
+          <g style="transform-origin:60px 60px;transform-box:view-box;animation:blink 5s ease-in-out infinite;">
+            <ellipse cx="48" cy="60" rx="8.5" ry="11" fill="#fffdf6" stroke="#1a0d05" style="stroke-width:1.6;"></ellipse>
+            <ellipse cx="72" cy="60" rx="8.5" ry="11" fill="#fffdf6" stroke="#1a0d05" style="stroke-width:1.6;"></ellipse>
+            <ellipse cx="50" cy="63" rx="4.6" ry="7" fill="#1a0d05"></ellipse>
+            <ellipse cx="70" cy="63" rx="4.6" ry="7" fill="#1a0d05"></ellipse>
+            <path d="M51 58 L53.6 56.6 L53.2 60 Z M71 58 L73.6 56.6 L73.2 60 Z" fill="#fffdf6"></path>
+            <path d="M41.5 52 Q37 50 35 46 M43.5 50 Q41 46 41 42 M46.5 49 Q46 45 47.5 41.5 M78.5 52 Q83 50 85 46 M76.5 50 Q79 46 79 42 M73.5 49 Q74 45 72.5 41.5" fill="none" stroke="#1a0d05" style="stroke-width:1.8;stroke-linecap:round;"></path>
+          </g>
+          <!-- rosy cheeks and a big open smile -->
+          <ellipse cx="36" cy="75" rx="5.5" ry="3.4" fill="#ff6f61" style="opacity:.5;"></ellipse>
+          <ellipse cx="84" cy="75" rx="5.5" ry="3.4" fill="#ff6f61" style="opacity:.5;"></ellipse>
+          <path d="M45 76 Q60 100 75 76 Q60 81 45 76 Z" fill="#3a0d05" stroke="#1a0d05" style="stroke-width:1.6;stroke-linejoin:round;"></path>
+          <path d="M53 85 Q60 80.5 67 85 Q60 88.5 53 85 Z" fill="#e2554a"></path>
+        </svg>
+
+        <div aria-live="polite" style="{{ bubbleStyle }}">
+          <span style="{{ bubbleTailStyle }}"></span>
+          <span style="{{ speakerStyle }}">{{ speaker }}</span>
+          <span style="display:block;">{{ line }}</span>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- Flip clock -->
+    <div role="timer" aria-label="{{ timeLabel }}" style="{{ clockRowStyle }}">
 
       <div style="display:flex;align-items:stretch;gap:{{ gap }};">
-        <div style="{{ cardBox }}">
-          <div style="position:relative;width:100%;height:100%;display:grid;place-items:center;border-radius:16px;background:linear-gradient(180deg,rgba(94,230,255,.12),rgba(8,10,26,.72) 46%,rgba(4,5,16,.9));border:1px solid rgba(94,230,255,.22);box-shadow:0 0 0 1px rgba(0,0,0,.5) inset,0 24px 60px -30px rgba(94,230,255,.6);overflow:hidden;">
-            <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(3,4,12,.85);"></div>
-            <span style="{{ flip0 }}">{{ d0 }}</span>
+        <sc-for list="{{ hourCards }}" as="c">
+          <div style="{{ cardBox }}">
+            <div style="position:relative;width:100%;height:100%;display:grid;place-items:center;border-radius:14px;background:linear-gradient(180deg,rgba(255,154,31,.16),rgba(30,16,6,.8) 46%,rgba(14,7,2,.94));border:1px solid rgba(255,154,31,.3);box-shadow:0 0 0 4px rgba(58,34,16,.9),0 0 0 5px rgba(255,154,31,.18),0 0 0 1px rgba(0,0,0,.5) inset,0 24px 60px -30px rgba(255,154,31,.7);overflow:hidden;">
+              <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(10,5,1,.9);"></div>
+              <span style="{{ c.flip }}">{{ c.d }}</span>
+            </div>
           </div>
-        </div>
-        <div style="{{ cardBox }}">
-          <div style="position:relative;width:100%;height:100%;display:grid;place-items:center;border-radius:16px;background:linear-gradient(180deg,rgba(94,230,255,.12),rgba(8,10,26,.72) 46%,rgba(4,5,16,.9));border:1px solid rgba(94,230,255,.22);box-shadow:0 0 0 1px rgba(0,0,0,.5) inset,0 24px 60px -30px rgba(94,230,255,.6);overflow:hidden;">
-            <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(3,4,12,.85);"></div>
-            <span style="{{ flip1 }}">{{ d1 }}</span>
-          </div>
-        </div>
+        </sc-for>
         <div style="{{ colonBox }}">
           <div style="display:flex;flex-direction:column;gap:{{ dotGap }};animation:breathe 2s ease-in-out infinite;">
             <span style="{{ dot }}"></span>
             <span style="{{ dot }}"></span>
           </div>
         </div>
-        <div style="{{ cardBox }}">
-          <div style="position:relative;width:100%;height:100%;display:grid;place-items:center;border-radius:16px;background:linear-gradient(180deg,rgba(94,230,255,.12),rgba(8,10,26,.72) 46%,rgba(4,5,16,.9));border:1px solid rgba(94,230,255,.22);box-shadow:0 0 0 1px rgba(0,0,0,.5) inset,0 24px 60px -30px rgba(94,230,255,.6);overflow:hidden;">
-            <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(3,4,12,.85);"></div>
-            <span style="{{ flip2 }}">{{ d2 }}</span>
+        <sc-for list="{{ minuteCards }}" as="c">
+          <div style="{{ cardBox }}">
+            <div style="position:relative;width:100%;height:100%;display:grid;place-items:center;border-radius:14px;background:linear-gradient(180deg,rgba(255,154,31,.16),rgba(30,16,6,.8) 46%,rgba(14,7,2,.94));border:1px solid rgba(255,154,31,.3);box-shadow:0 0 0 4px rgba(58,34,16,.9),0 0 0 5px rgba(255,154,31,.18),0 0 0 1px rgba(0,0,0,.5) inset,0 24px 60px -30px rgba(255,154,31,.7);overflow:hidden;">
+              <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(10,5,1,.9);"></div>
+              <span style="{{ c.flip }}">{{ c.d }}</span>
+            </div>
           </div>
-        </div>
-        <div style="{{ cardBox }}">
-          <div style="position:relative;width:100%;height:100%;display:grid;place-items:center;border-radius:16px;background:linear-gradient(180deg,rgba(94,230,255,.12),rgba(8,10,26,.72) 46%,rgba(4,5,16,.9));border:1px solid rgba(94,230,255,.22);box-shadow:0 0 0 1px rgba(0,0,0,.5) inset,0 24px 60px -30px rgba(94,230,255,.6);overflow:hidden;">
-            <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(3,4,12,.85);"></div>
-            <span style="{{ flip3 }}">{{ d3 }}</span>
-          </div>
-        </div>
+        </sc-for>
       </div>
 
       <sc-if value="{{ showSeconds }}" hint-placeholder-val="{{ true }}">
@@ -84,17 +178,156 @@
 
     </div>
 
-    <div style="{{ trackStyle }}">
-      <div style="{{ progressStyle }}"></div>
+    <!-- Sacred Timeline: one sweep per minute -->
+    <div style="display:flex;flex-direction:column;gap:8px;width:{{ trackW }};max-width:100%;">
+      <div style="{{ trackStyle }}">
+        <div style="{{ progressStyle }}"></div>
+        <sc-for list="{{ nodes }}" as="n">
+          <span style="{{ n.style }}"></span>
+        </sc-for>
+      </div>
+      <div style="display:flex;justify-content:space-between;gap:12px;font-size:{{ labelSize }};letter-spacing:.24em;text-transform:uppercase;font-weight:500;">
+        <span style="color:rgba(255,201,121,.7);white-space:nowrap;">Sacred Timeline</span>
+        <span style="{{ nexusStyle }}">{{ nexusText }}</span>
+      </div>
     </div>
+
+    <!-- The cast: one variant is "on duty" each minute -->
+    <sc-if value="{{ showCast }}" hint-placeholder-val="{{ true }}">
+      <div aria-label="TVA cast" style="{{ castRowStyle }}">
+        <sc-for list="{{ cast }}" as="m">
+          <div title="{{ m.name }} · {{ m.role }}" style="{{ m.cellStyle }}">
+            <div style="{{ m.badgeStyle }}">
+              <!-- Original, simplified emblems on a 48x48 grid -->
+              <svg aria-hidden="true" viewBox="0 0 48 48" style="width:72%;height:72%;overflow:visible;stroke-linecap:round;stroke-linejoin:round;">
+                <sc-if value="{{ m.icon.loki }}">
+                  <path d="M16 19 C9 15 5 9 7 2 C11 8 15 11 21 14 Z M32 19 C39 15 43 9 41 2 C37 8 33 11 27 14 Z M13 42 V27 Q13 13 24 13 Q35 13 35 27 V42 H29 V29 Q29 21 24 21 Q19 21 19 29 V42 Z" fill="#e8b23a" stroke="#7a5410" style="stroke-width:1.5;"></path>
+                </sc-if>
+                <sc-if value="{{ m.icon.hwr }}">
+                  <circle cx="24" cy="24" r="19" fill="none" stroke="#9b6cff" style="stroke-width:2.5;"></circle>
+                  <path d="M24 6 L29 18 V38 H19 V18 Z" fill="#c9b3ff" stroke="#4b2c94" style="stroke-width:1.5;"></path>
+                  <path d="M12 42 H36 V38 H12 Z" fill="#7a55d6" stroke="#4b2c94" style="stroke-width:1.5;"></path>
+                  <path d="M24 26 V20 M24 26 L28 28" fill="none" stroke="#2a1608" style="stroke-width:1.8;"></path>
+                </sc-if>
+                <sc-if value="{{ m.icon.sylvie }}">
+                  <path d="M15 29 C11 22 9 14 12 5 C14 13 17 20 21 26 Z M33 29 C35 25 36 22 37 18 L33 20 C32 23 30 25 28 26 Z M9 31 Q24 21 39 31 L38 36 Q24 27 10 36 Z" fill="#e8b23a" stroke="#7a5410" style="stroke-width:1.5;"></path>
+                </sc-if>
+                <sc-if value="{{ m.icon.mobius }}">
+                  <path d="M10 18 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 Z M27 18 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 Z M21 18 H27" fill="none" stroke="#ffe9c7" style="stroke-width:2;"></path>
+                  <path d="M7 31 C11 24 18 24 24 28 C30 24 37 24 41 31 C37 30 32 33 24 33 C16 33 11 30 7 31 Z" fill="#8a5a2b" stroke="#3a220e" style="stroke-width:1.5;"></path>
+                </sc-if>
+                <sc-if value="{{ m.icon.ravonna }}">
+                  <path d="M9 15 L21 7 L28 16 L16 24 Z" fill="#e0c38c" stroke="#5a3a14" style="stroke-width:1.5;"></path>
+                  <path d="M21 19 L38 40" fill="none" stroke="#8a5a2b" style="stroke-width:4;"></path>
+                  <path d="M28 43 H44" fill="none" stroke="#5a3a14" style="stroke-width:4;"></path>
+                </sc-if>
+                <sc-if value="{{ m.icon.b15 }}">
+                  <path d="M21 12 H27 V42 H21 Z" fill="#4a3420" stroke="#1e1208" style="stroke-width:1.5;"></path>
+                  <path d="M20 5 H28 V12 H20 Z" fill="#ff9a1f" stroke="#a85a0a" style="stroke-width:1.5;"></path>
+                  <path d="M21 30 H27 M21 34 H27 M21 38 H27" fill="none" stroke="#8a6a4a" style="stroke-width:1.2;"></path>
+                </sc-if>
+                <sc-if value="{{ m.icon.ob }}">
+                  <path d="M24 8 a16 16 0 1 1 -11.3 4.7" fill="none" stroke="#6fd4b0" style="stroke-width:4.5;"></path>
+                  <path d="M10 6 L17 9 L12 15 Z" fill="#6fd4b0" stroke="#2d7a60" style="stroke-width:1.2;"></path>
+                  <path d="M18 26 H30 M24 20 V32" fill="none" stroke="#ffe9c7" style="stroke-width:2;"></path>
+                </sc-if>
+                <sc-if value="{{ m.icon.gator }}">
+                  <path d="M5 30 Q5 22 17 22 L41 24 Q44 27 41 30 L17 32 Q5 34 5 30 Z" fill="#5aa83c" stroke="#2a5a1a" style="stroke-width:1.5;"></path>
+                  <path d="M18 27 H40" fill="none" stroke="#2a5a1a" style="stroke-width:1.2;"></path>
+                  <circle cx="17" cy="22" r="3" fill="#ffe9c7" stroke="#2a5a1a" style="stroke-width:1;"></circle>
+                  <path d="M11 20 L9 11 L15 17 Z M21 19 L24 10 L25 19 Z" fill="#e8b23a" stroke="#7a5410" style="stroke-width:1;"></path>
+                </sc-if>
+              </svg>
+            </div>
+            <span style="{{ m.nameStyle }}">{{ m.name }}</span>
+            <sc-if value="{{ showRoles }}">
+              <span style="{{ m.roleStyle }}">{{ m.tag }}</span>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
 
   </div>
 
-  <footer style="position:absolute;left:0;right:0;bottom:clamp(14px,4vh,34px);text-align:center;font-weight:300;font-size:clamp(10px,1.5vw,13px);letter-spacing:.32em;text-transform:uppercase;color:rgba(147,233,247,.62);">Stephen Abueva &nbsp;|&nbsp; {{ year }}</footer>
+  <footer style="position:absolute;left:0;right:0;bottom:clamp(10px,2.4vh,24px);text-align:center;font-weight:300;font-size:clamp(10px,1.5vw,12px);letter-spacing:.32em;text-transform:uppercase;color:rgba(255,201,121,.55);">Stephen Abueva &nbsp;|&nbsp; {{ year }}</footer>
 </div>
 
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;use24Hour&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;showSeconds&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;showDate&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;use24Hour&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;showSeconds&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;showDate&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;showMissMinutes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;showCast&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+// ---- Theme ---------------------------------------------------------------
+const TVA = Object.freeze({
+  amber: '#ff9a1f',
+  amberSoft: 'rgba(255,154,31,',
+  cream: '#ffe9c7',
+  ink: '#2a1608',
+  alert: '#ff5a3c'
+});
+
+// Seconds between speech-bubble lines.
+const LINE_PERIOD_S = 15;
+// Seconds the "nexus event" alert stays up after each minute rolls over.
+const NEXUS_ALERT_S = 3;
+// Cast badge cell widths (px) and the gap between cells.
+const CAST_CELL = Object.freeze({ full: 92, compact: 72 });
+const CAST_GAP = 6;
+
+// ---- Cast ----------------------------------------------------------------
+// Icons live in the template (cast row). Lines are original, written
+// in each character's spirit rather than quoted from the show.
+const CAST = Object.freeze([
+  {
+    id: 'loki', name: 'Loki', role: 'Variant L1130', tag: 'Variant', color: '#3fbf6a',
+    lines: ['Glorious purpose, now with a strict schedule.', 'I was burdened with glorious punctuality.', 'Time is a construct. Mine, ideally.']
+  },
+  {
+    id: 'hwr', name: 'He Who Remains', role: 'Keeper of the Citadel', tag: 'End of Time', color: '#9b6cff',
+    lines: ['I have seen every minute. This one is fine.', 'Try not to break the timeline before lunch.', 'Every clock ends up in my Citadel eventually.']
+  },
+  {
+    id: 'sylvie', name: 'Sylvie', role: 'Variant on the run', tag: 'Variant', color: '#d9a441',
+    lines: ['Keep your schedule. I will keep my own.', 'Every second is a choice. Make a good one.', 'No one prunes me before my coffee.']
+  },
+  {
+    id: 'mobius', name: 'Mobius', role: 'Agent, Variant Analyst', tag: 'Agent', color: '#c98a4a',
+    lines: ['Plenty of time left for jet ski research.', 'Clock checks out. Want a salad from the break room?', 'I just love a well-kept timeline.']
+  },
+  {
+    id: 'ravonna', name: 'Ravonna', role: 'Judge Renslayer', tag: 'Judge', color: '#e0c38c',
+    lines: ['This minute has been reviewed and approved.', 'Order in the timeline, please.', 'Court is adjourned until the next tick.']
+  },
+  {
+    id: 'b15', name: 'Hunter B-15', role: 'Minuteman squad leader', tag: 'Minuteman', color: '#ff9a1f',
+    lines: ['Minutemen, hold position. Clock is secure.', 'No nexus events on my watch.', 'Reset charges armed. Kidding. Mostly.']
+  },
+  {
+    id: 'ob', name: 'OB', role: 'Ouroboros, Repair & Advancement', tag: 'Tech', color: '#6fd4b0',
+    lines: ['Per the manual, a clock should tick. This one does.', 'I wrote the guide on this. Chapter 9, page 4.', 'Temporal loom readings look great today!']
+  },
+  {
+    id: 'gator', name: 'Alligator Loki', role: 'Variant, very green', tag: 'Variant', color: '#5aa83c',
+    lines: ['*hiss* (he ate the snooze button)', '*chomp* (that was the alarm)', '*tail swish* (he approves of this minute)']
+  }
+]);
+
+// Miss Minutes hosts. `{t}` is replaced with the current time.
+const MISS_LINES = Object.freeze([
+  "Hey y'all! It's {t} on the Sacred Timeline.",
+  'Right on schedule! It is {t}, sugar.',
+  'Tick tock! {t}, and not a branch out of place.',
+  "It's {t}. Remember, the TVA is always watching the clock!"
+]);
+
+const pad2 = (n) => String(n).padStart(2, '0');
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+// Miss Minutes' clock hands pivot on her forehead at (60, 42) in SVG units.
+const handStyle = (deg, width) => ({
+  strokeWidth: width, strokeLinecap: 'round',
+  transformBox: 'view-box', transformOrigin: '60px 42px',
+  transform: 'rotate(' + deg.toFixed(2) + 'deg)'
+});
+
 class Component extends DCLogic {
   state = { now: new Date(), keys: [0,0,0,0,0,0], w: 1200, h: 800 };
 
@@ -115,11 +348,20 @@ class Component extends DCLogic {
   measure() {
     this.setState({ w: window.innerWidth, h: window.innerHeight });
   }
-  digitsFor(now) {
-    const h24 = this.props.use24Hour !== false;
+  is24h() {
+    return this.props.use24Hour !== false;
+  }
+  displayHour(now) {
     let h = now.getHours();
-    if (!h24) { h = h % 12; if (h === 0) h = 12; }
-    return (String(h).padStart(2, '0') + String(now.getMinutes()).padStart(2, '0') + String(now.getSeconds()).padStart(2, '0')).split('');
+    if (!this.is24h()) { h = h % 12; if (h === 0) h = 12; }
+    return h;
+  }
+  digitsFor(now) {
+    return (pad2(this.displayHour(now)) + pad2(now.getMinutes()) + pad2(now.getSeconds())).split('');
+  }
+  shortTime(now) {
+    const hm = (this.is24h() ? pad2(this.displayHour(now)) : String(this.displayHour(now))) + ':' + pad2(now.getMinutes());
+    return this.is24h() ? hm : hm + (now.getHours() < 12 ? ' AM' : ' PM');
   }
   tick() {
     const now = new Date();
@@ -135,53 +377,150 @@ class Component extends DCLogic {
     this.setState({ now, keys });
   }
 
-  renderVals() {
-    const { now, keys, w, h } = this.state;
-    const showSeconds = this.props.showSeconds !== false;
-    const showDate = this.props.showDate !== false;
-    const h24 = this.props.use24Hour !== false;
+  // The cast member "on duty" rotates every minute of the day.
+  dutyIndex(now) {
+    return (now.getHours() * 60 + now.getMinutes()) % CAST.length;
+  }
 
-    const avail = Math.max(220, w - 48);
+  // Alternates Miss Minutes' announcements with a line from whoever is on duty.
+  speech(now) {
+    const slot = Math.floor(now.getSeconds() / LINE_PERIOD_S);
+    const minuteOfDay = now.getHours() * 60 + now.getMinutes();
+    if (slot % 2 === 0) {
+      const text = MISS_LINES[(minuteOfDay + slot / 2) % MISS_LINES.length];
+      return { speaker: 'Miss Minutes', line: text.replace('{t}', this.shortTime(now)), color: TVA.amber };
+    }
+    const member = CAST[this.dutyIndex(now)];
+    const text = member.lines[(minuteOfDay + (slot - 1) / 2) % member.lines.length];
+    return { speaker: member.name, line: text, color: member.color };
+  }
+
+  layout(w, h, opts) {
+    const { showSeconds, showDate, showMissMinutes, showCast } = opts;
+    const avail = Math.max(220, w - 32);
     const stack = avail < 620;
     // HH:MM block budget: 4 cards + colon(0.42) + 5 gaps(0.13 each)
     const unitsRow = 4 + 0.42 + 5 * 0.13;
     const secUnits = showSeconds && !stack ? 1.05 : 0;
     const budget = avail / (unitsRow + secUnits);
-    const vertical = (h - (showDate ? 140 : 90) - (stack && showSeconds ? 90 : 0)) / 1.34;
-    const card = Math.max(38, Math.min(budget, vertical, 190));
+
+    const fixed = 110 /* header + footer */ + (showDate ? 34 : 0) + 46 /* timeline */ + (stack && showSeconds ? 90 : 0);
+    const fit = (mascotH, castH) => (h - fixed - (mascotH ? mascotH + 18 : 0) - (castH ? castH + 18 : 0)) / 1.34;
+
+    // The cast wraps onto as many rows as the width needs.
+    const castHeight = (cellW, rowH) => {
+      const perRow = Math.max(1, Math.floor((avail + CAST_GAP) / (cellW + CAST_GAP)));
+      return showCast ? Math.ceil(CAST.length / perRow) * rowH : 0;
+    };
+
+    // Shrink the mascot and cast before letting the digits get cramped.
+    let compact = h < 640 || avail < 520;
+    let mascotH = showMissMinutes ? Math.round(clamp(h * 0.15, 72, 128)) : 0;
+    let castH = compact ? castHeight(CAST_CELL.compact, 64) : castHeight(CAST_CELL.full, 96);
+    if (fit(mascotH, castH) < 80) {
+      compact = true;
+      mascotH = showMissMinutes ? 56 : 0;
+      castH = castHeight(CAST_CELL.compact, 58);
+    }
+    const card = Math.max(38, Math.min(budget, fit(mascotH, castH), 190));
+    return { avail, stack, unitsRow, secUnits, card, mascotH, compact };
+  }
+
+  renderVals() {
+    const { now, keys, w, h } = this.state;
+    const showSeconds = this.props.showSeconds !== false;
+    const showDate = this.props.showDate !== false;
+    const showMissMinutes = this.props.showMissMinutes !== false;
+    const showCast = this.props.showCast !== false;
+    const h24 = this.is24h();
+
+    const { avail, stack, unitsRow, secUnits, card, mascotH, compact } =
+      this.layout(w, h, { showSeconds, showDate, showMissMinutes, showCast });
 
     const d = this.digitsFor(now);
-    const cardBox = (i) => ({
-      width: card + 'px', height: Math.round(card * 1.34) + 'px',
-      fontSize: Math.round(card * 1.02) + 'px'
-    });
     const flip = (i) => ({
       display: 'block', fontWeight: 500, lineHeight: 1,
-      color: '#eafeff', letterSpacing: '-0.02em',
-      textShadow: '0 0 6px rgba(94,230,255,.9), 0 0 22px rgba(94,230,255,.55), 0 0 60px rgba(94,230,255,.28)',
+      color: '#fff3dd', letterSpacing: '-0.02em',
+      textShadow: '0 0 6px rgba(255,154,31,.95), 0 0 22px rgba(255,154,31,.6), 0 0 60px rgba(255,120,20,.3)',
       animation: `dig${keys[i] % 2 ? 'A' : 'B'} 480ms cubic-bezier(.16,.84,.24,1)`,
       transformOrigin: '50% 0%'
     });
+    const cardOf = (i) => ({ d: d[i], flip: flip(i) });
 
     const secSize = Math.round(card * (stack ? 0.44 : 0.38));
     const secStyle = {
       fontSize: secSize + 'px', fontWeight: 300, lineHeight: 1,
-      color: 'rgba(94,230,255,.82)', letterSpacing: '-0.01em',
-      textShadow: '0 0 14px rgba(94,230,255,.5)',
+      color: 'rgba(255,170,70,.85)', letterSpacing: '-0.01em',
+      textShadow: '0 0 14px rgba(255,154,31,.5)',
       fontVariantNumeric: 'tabular-nums'
     };
 
-    const pct = ((now.getSeconds() * 1000 + now.getMilliseconds()) / 60000) * 100;
+    const sec = now.getSeconds();
+    const pct = ((sec * 1000 + now.getMilliseconds()) / 60000) * 100;
     const trackW = Math.round(Math.min(avail, card * (unitsRow + secUnits)));
 
+    // A nexus event "fires" as each minute rolls over (not on first load).
+    const nexus = sec < NEXUS_ALERT_S && keys[3] > 0;
+    const nexusAnim = keys[3] > 0 ? `nex${keys[3] % 2 ? 'A' : 'B'} 700ms ease-out` : 'none';
+
+    const duty = this.dutyIndex(now);
+    const talk = this.speech(now);
+    const labelSize = Math.round(clamp(card * 0.075, 9, 12)) + 'px';
+    const badge = compact ? 34 : 46;
+
+    const cast = CAST.map((m, i) => {
+      const on = i === duty;
+      return {
+        name: m.name, role: m.role, icon: { [m.id]: true },
+        tag: on ? 'On duty' : m.tag,
+        cellStyle: {
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px',
+          flex: 'none', width: (compact ? CAST_CELL.compact : CAST_CELL.full) + 'px', textAlign: 'center',
+          opacity: on ? 1 : 0.72, transition: 'opacity .4s'
+        },
+        badgeStyle: {
+          width: badge + 'px', height: badge + 'px', borderRadius: '50%',
+          display: 'grid', placeItems: 'center',
+          background: `radial-gradient(circle at 50% 35%, ${m.color}33, ${TVA.ink} 70%)`,
+          border: `2px solid ${on ? m.color : 'rgba(255,201,121,.22)'}`,
+          boxShadow: on ? `0 0 0 3px ${m.color}33, 0 0 22px ${m.color}aa` : 'none',
+          transform: on ? 'translateY(-3px) scale(1.06)' : 'none',
+          transition: 'transform .4s, box-shadow .4s, border-color .4s'
+        },
+        nameStyle: {
+          fontSize: (compact ? 9 : 10.5) + 'px', fontWeight: 700, letterSpacing: '.06em',
+          textTransform: 'uppercase', color: on ? '#fff3dd' : 'rgba(255,233,199,.8)',
+          lineHeight: 1.2
+        },
+        roleStyle: {
+          fontSize: '9px', letterSpacing: '.14em', textTransform: 'uppercase',
+          color: on ? m.color : 'rgba(255,201,121,.5)', fontWeight: on ? 700 : 300
+        }
+      };
+    });
+
+    const mmW = Math.round(mascotH * 0.8);
+
     return {
-      d0: d[0], d1: d[1], d2: d[2], d3: d[3], d4: d[4], d5: d[5],
-      flip0: flip(0), flip1: flip(1), flip2: flip(2), flip3: flip(3),
-      cardBox: cardBox(), showSeconds, showDate,
+      d4: d[4], d5: d[5],
+      hourCards: [cardOf(0), cardOf(1)],
+      minuteCards: [cardOf(2), cardOf(3)],
+      cardBox: {
+        width: card + 'px', height: Math.round(card * 1.34) + 'px',
+        fontSize: Math.round(card * 1.02) + 'px'
+      },
+      showSeconds, showDate, showMissMinutes, showCast,
+      showRoles: !compact,
       meridiem: h24 ? false : (now.getHours() < 12 ? 'AM' : 'PM'),
       meridiemStyle: {
         fontSize: Math.round(secSize * 0.6) + 'px', fontWeight: 500,
-        letterSpacing: '.18em', color: 'rgba(147,233,247,.7)', marginLeft: '6px'
+        letterSpacing: '.18em', color: 'rgba(255,201,121,.75)', marginLeft: '6px'
+      },
+      timeLabel: 'Current time ' + this.shortTime(now),
+      clockRowStyle: {
+        display: 'flex', alignItems: 'flex-end', justifyContent: 'center', flexWrap: 'wrap',
+        gap: Math.round(card * (stack ? 0.16 : 0.34)) + 'px',
+        animation: nexusAnim
       },
       colonBox: {
         width: Math.round(card * 0.42) + 'px', display: 'flex',
@@ -189,26 +528,95 @@ class Component extends DCLogic {
       },
       dot: {
         display: 'block', width: Math.round(card * 0.11) + 'px', height: Math.round(card * 0.11) + 'px',
-        borderRadius: '50%', background: '#7defff',
-        boxShadow: '0 0 10px rgba(94,230,255,.95), 0 0 28px rgba(94,230,255,.5)'
+        borderRadius: '50%', background: '#ffb547',
+        boxShadow: '0 0 10px rgba(255,154,31,.95), 0 0 28px rgba(255,154,31,.5)'
       },
       dotGap: Math.round(card * 0.2) + 'px',
       gap: Math.round(card * 0.13) + 'px',
-      groupGap: Math.round(card * (stack ? 0.16 : 0.34)) + 'px',
       secGap: Math.round(card * 0.06) + 'px',
-      stackGap: Math.round(Math.max(16, card * 0.28)) + 'px',
-      dateSize: Math.round(Math.max(9, Math.min(card * 0.155, 17))) + 'px',
+      stackGap: Math.round(clamp(card * 0.16, 12, 26)) + 'px',
+      dateSize: Math.round(Math.max(9, Math.min(card * 0.12, 15))) + 'px',
       secStyle,
+
+      // Header
+      logoStyle: { width: compact ? '44px' : '58px', height: 'auto', flex: 'none', filter: 'drop-shadow(0 0 10px rgba(255,154,31,.45))' },
+      orgStyle: {
+        fontSize: (compact ? 10 : 13) + 'px', fontWeight: 700, letterSpacing: '.28em',
+        textTransform: 'uppercase', color: '#ffcf7a', textShadow: '0 0 12px rgba(255,154,31,.5)'
+      },
+      mottoStyle: {
+        fontSize: (compact ? 8.5 : 10) + 'px', fontWeight: 300, letterSpacing: '.3em',
+        textTransform: 'uppercase', color: 'rgba(255,201,121,.65)'
+      },
+
+      // Miss Minutes
+      hourHand: handStyle((now.getHours() % 12) * 30 + now.getMinutes() * 0.5, 3.4),
+      minuteHand: handStyle(now.getMinutes() * 6 + sec * 0.1, 2.4),
+      mmGap: Math.round(clamp(mascotH * 0.12, 8, 18)) + 'px',
+      mmStyle: {
+        width: mmW + 'px', height: mascotH + 'px', flex: 'none', overflow: 'visible',
+        animation: 'bob 3.2s ease-in-out infinite',
+        filter: 'drop-shadow(0 8px 18px rgba(255,120,20,.35))'
+      },
+      speaker: talk.speaker,
+      line: talk.line,
+      bubbleStyle: {
+        position: 'relative', maxWidth: Math.round(Math.min(460, avail - mmW - 24)) + 'px',
+        minWidth: 0, padding: compact ? '8px 12px' : '12px 16px', borderRadius: '14px',
+        background: 'linear-gradient(180deg, rgba(58,34,16,.92), rgba(30,16,6,.92))',
+        border: `1px solid ${talk.color}88`,
+        boxShadow: `0 0 0 1px rgba(0,0,0,.4) inset, 0 10px 30px -12px ${talk.color}99`,
+        fontSize: (compact ? 11 : 13.5) + 'px', lineHeight: 1.45, color: TVA.cream,
+        // Alternating identical keyframes replays the entrance on each new line.
+        animation: `bubble${Math.floor(sec / LINE_PERIOD_S) % 2 ? 'A' : 'B'} 420ms ease-out`
+      },
+      bubbleTailStyle: {
+        position: 'absolute', left: '-7px', top: '50%', width: '12px', height: '12px',
+        background: 'rgba(48,27,12,.95)', borderLeft: `1px solid ${talk.color}88`, borderBottom: `1px solid ${talk.color}88`,
+        transform: 'translateY(-50%) rotate(45deg)'
+      },
+      speakerStyle: {
+        display: 'block', fontSize: (compact ? 9 : 10) + 'px', fontWeight: 700,
+        letterSpacing: '.22em', textTransform: 'uppercase', color: talk.color, marginBottom: '3px'
+      },
+
+      // Sacred Timeline
+      trackW: trackW + 'px',
+      labelSize,
       trackStyle: {
-        width: trackW + 'px', height: '2px', borderRadius: '2px',
-        background: 'rgba(94,230,255,.13)', overflow: 'hidden'
+        position: 'relative', width: '100%', height: '3px', borderRadius: '3px',
+        background: 'rgba(255,154,31,.14)', overflow: 'visible'
       },
       progressStyle: {
-        width: pct.toFixed(2) + '%', height: '100%',
-        background: 'linear-gradient(90deg,rgba(94,230,255,.35),#7defff)',
-        boxShadow: '0 0 12px rgba(94,230,255,.8)'
+        width: pct.toFixed(2) + '%', height: '100%', borderRadius: '3px',
+        background: nexus ? `linear-gradient(90deg,rgba(255,90,60,.4),${TVA.alert})` : 'linear-gradient(90deg,rgba(255,154,31,.35),#ffb547)',
+        boxShadow: nexus ? '0 0 14px rgba(255,90,60,.9)' : '0 0 12px rgba(255,154,31,.8)'
       },
-      dateStr: now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }),
+      nodes: [0, 25, 50, 75, 100].map((p) => ({
+        style: {
+          position: 'absolute', left: p + '%', top: '50%', width: '7px', height: '7px',
+          borderRadius: '50%', transform: 'translate(-50%,-50%)',
+          background: pct >= p ? '#ffb547' : TVA.ink,
+          border: '1px solid rgba(255,154,31,.7)'
+        }
+      })),
+      nexusText: nexus ? 'Nexus event · branch pruned' : 'Next reset in ' + pad2(60 - sec) + 's',
+      nexusStyle: {
+        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+        color: nexus ? TVA.alert : 'rgba(255,201,121,.55)',
+        textShadow: nexus ? '0 0 10px rgba(255,90,60,.8)' : 'none'
+      },
+
+      // Cast
+      cast,
+      castRowStyle: {
+        display: 'flex', flexWrap: 'wrap', rowGap: '10px', columnGap: CAST_GAP + 'px',
+        justifyContent: 'center', maxWidth: avail + 'px', padding: '6px 0 2px'
+      },
+
+      dateStr: avail < 620
+        ? now.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
+        : 'Temporal coordinates · ' + now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }),
       year: now.getFullYear()
     };
   }
