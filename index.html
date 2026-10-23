@@ -134,8 +134,13 @@
           <path d="M53 85 Q60 80.5 67 85 Q60 88.5 53 85 Z" fill="#e2554a"></path>
         </sc-if>
 
-        <!-- Original cartoon portraits of the other characters -->
-        <sc-if value="{{ notMiss }}">
+        <!-- Optional photo from assets/cast/<id>.jpg, shown once it loads -->
+        <sc-if value="{{ showPhoto }}">
+          <div role="img" aria-label="{{ portraitLabel }}" style="{{ photoStyle }}"></div>
+        </sc-if>
+
+        <!-- Original cartoon portraits (also the fallback when no photo exists) -->
+        <sc-if value="{{ showDrawing }}">
         <svg role="img" aria-label="{{ portraitLabel }}" viewBox="0 0 120 150" style="{{ mmStyle }}">
           <sc-if value="{{ portrait.loki }}">
             <path d="M36 66 Q36 38 60 38 Q84 38 84 66 L86 106 Q80 108 76 102 L78 68 Q60 52 42 68 L44 102 Q40 108 34 106 Z" fill="#15100c"></path>
@@ -393,6 +398,10 @@ const NEXUS_ALERT_S = 3;
 // Cast badge cell widths (px) and the gap between cells.
 const CAST_CELL = Object.freeze({ full: 92, compact: 72 });
 const CAST_GAP = 6;
+// Optional character photos live at assets/cast/<id>.jpg. Ids come from the
+// fixed cast list below, never from user input.
+const PHOTO_DIR = 'assets/cast/';
+const photoUrl = (id) => PHOTO_DIR + encodeURIComponent(id) + '.jpg';
 // localStorage key for the chosen character (a per-viewer convenience).
 const STORAGE_KEY = 'tva-clock:character';
 
@@ -490,10 +499,12 @@ const handStyle = (deg, width) => ({
 });
 
 class Component extends DCLogic {
-  state = { now: new Date(), keys: [0,0,0,0,0,0], w: 1200, h: 800, selected: loadCharacter() };
+  // photos: id -> 'ok' | 'missing' once probed.
+  state = { now: new Date(), keys: [0,0,0,0,0,0], w: 1200, h: 800, selected: loadCharacter(), photos: {} };
 
   componentDidMount() {
     this.prev = null;
+    this.probePhoto(this.state.selected);
     this.measure();
     this.ro = () => this.measure();
     window.addEventListener('resize', this.ro);
@@ -502,6 +513,7 @@ class Component extends DCLogic {
     this.tick();
   }
   componentWillUnmount() {
+    this.unmounted = true;
     clearInterval(this.timer);
     window.removeEventListener('resize', this.ro);
     window.removeEventListener('orientationchange', this.ro);
@@ -542,6 +554,22 @@ class Component extends DCLogic {
     if (!Object.prototype.hasOwnProperty.call(CHARACTER_BY_ID, id)) return;
     saveCharacter(id);
     this.setState({ selected: id });
+    this.probePhoto(id);
+  }
+
+  // Checks once per character whether a photo file exists; the drawing is
+  // shown until (and unless) it loads.
+  probePhoto(id) {
+    if (id === MISS_MINUTES.id || this.state.photos[id] || (this.probing && this.probing[id])) return;
+    this.probing = { ...this.probing, [id]: true };
+    const img = new Image();
+    const done = (status) => {
+      if (this.unmounted) return;
+      this.setState({ photos: { ...this.state.photos, [id]: status } });
+    };
+    img.onload = () => done('ok');
+    img.onerror = () => done('missing');
+    img.src = photoUrl(id);
   }
 
   // The cast member "on duty" rotates every minute of the day.
@@ -695,7 +723,15 @@ class Component extends DCLogic {
         background: `radial-gradient(115% 85% at 50% 8%,${theme.bg[0]} 0%,${theme.bg[1]} 45%,${theme.bg[2]} 100%)`
       },
       isMiss: host.id === MISS_MINUTES.id,
-      notMiss: host.id !== MISS_MINUTES.id,
+      showPhoto: host.id !== MISS_MINUTES.id && this.state.photos[host.id] === 'ok',
+      showDrawing: host.id !== MISS_MINUTES.id && this.state.photos[host.id] !== 'ok',
+      photoStyle: {
+        width: Math.round(mascotH * 0.8) + 'px', height: mascotH + 'px', flex: 'none',
+        borderRadius: '14px', backgroundColor: 'rgb(var(--ink))',
+        backgroundImage: `url("${photoUrl(host.id)}")`, backgroundSize: 'cover', backgroundPosition: 'center top',
+        border: `2px solid ${host.color}`,
+        boxShadow: `0 0 0 4px ${host.color}33, 0 10px 30px -10px ${host.color}`
+      },
       portrait: { [host.id]: true },
       portraitLabel: host.name + ', ' + host.role,
       d4: d[4], d5: d[5],
