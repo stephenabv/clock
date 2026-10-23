@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A TVA-themed flip clock with Miss Minutes, Loki, He Who Remains and the rest of the Time Variance Authority cast.">
 <title>TVA Clock</title>
+<link rel="icon" href="./favicon.ico" sizes="32x32">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<meta name="theme-color" content="#1d1008">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -398,7 +402,7 @@ const LINE_PERIOD_S = 15;
 // Seconds the "nexus event" alert stays up after each minute rolls over.
 const NEXUS_ALERT_S = 3;
 // Cast badge cell widths (px) and the gap between cells.
-const CAST_CELL = Object.freeze({ full: 92, compact: 72 });
+const CAST_CELL = Object.freeze({ full: 100, compact: 76 });
 const CAST_GAP = 6;
 // Optional character photos live at assets/cast/<id>.jpg. Ids come from the
 // fixed cast list below, never from user input.
@@ -622,11 +626,11 @@ class Component extends DCLogic {
     // Shrink the mascot and cast before letting the digits get cramped.
     let compact = h < 640 || avail < 520;
     let mascotH = showMissMinutes ? Math.round(clamp(h * 0.15, 72, 128)) : 0;
-    let castH = compact ? castHeight(CAST_CELL.compact, 64) : castHeight(CAST_CELL.full, 96);
+    let castH = compact ? castHeight(CAST_CELL.compact, 78) : castHeight(CAST_CELL.full, 114);
     if (fit(mascotH, castH) < 80) {
       compact = true;
       mascotH = showMissMinutes ? 56 : 0;
-      castH = castHeight(CAST_CELL.compact, 58);
+      castH = castHeight(CAST_CELL.compact, 70);
     }
     const card = Math.max(38, Math.min(budget, fit(mascotH, castH), 190));
     return { avail, stack, unitsRow, secUnits, card, mascotH, compact };
@@ -674,7 +678,7 @@ class Component extends DCLogic {
     const duty = CAST[this.dutyIndex(now)].id;
     const talk = this.speech(now, host);
     const labelSize = Math.round(clamp(card * 0.075, 9, 12)) + 'px';
-    const badge = compact ? 34 : 46;
+    const badge = compact ? 46 : 62;
 
     const cast = CHARACTERS.map((m) => {
       const picked = m.id === host.id;
