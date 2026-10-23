@@ -18,6 +18,9 @@
   html,body{margin:0;padding:0;background:#0d0703;}
   a{color:#ffb547;text-decoration:none}
   a:hover{color:#ffe0a8}
+  .tva-badge:focus{outline:none}
+  .tva-badge:focus-visible{outline:2px solid rgb(var(--hi));outline-offset:3px}
+  .tva-badge:hover{opacity:1!important}
   @keyframes digA{0%{transform:translateY(-34%) rotateX(-62deg);opacity:0;filter:blur(3px)}60%{filter:blur(0)}100%{transform:none;opacity:1;filter:blur(0)}}
   @keyframes digB{0%{transform:translateY(-34%) rotateX(-62deg);opacity:0;filter:blur(3px)}60%{filter:blur(0)}100%{transform:none;opacity:1;filter:blur(0)}}
   @keyframes breathe{0%,100%{opacity:.55}50%{opacity:1}}
@@ -33,24 +36,24 @@
 </style>
 </helmet>
 
-<div style="position:fixed;inset:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'JetBrains Mono',ui-monospace,monospace;color:#ffe9c7;background:radial-gradient(115% 85% at 50% 8%,#3a2210 0%,#1d1008 45%,#0d0703 100%);padding:24px 16px;">
+<div style="{{ rootStyle }}">
 
   <!-- Branching timelines (decorative) -->
   <svg aria-hidden="true" viewBox="0 0 1000 600" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.32;">
-    <path d="M-10 300 C200 300 300 300 500 300 S800 300 1010 300" fill="none" stroke="#ff9a1f" style="stroke-width:1.6;stroke-dasharray:6 10;animation:drift 30s linear infinite;"></path>
+    <path d="M-10 300 C200 300 300 300 500 300 S800 300 1010 300" fill="none" stroke="rgb(var(--a))" style="stroke-width:1.6;stroke-dasharray:6 10;animation:drift 30s linear infinite;"></path>
     <path d="M260 300 C340 300 380 210 520 170 S820 120 1010 90" fill="none" stroke="#3fbf6a" style="stroke-width:1.1;stroke-dasharray:3 9;animation:drift 38s linear infinite;"></path>
     <path d="M420 300 C500 300 560 380 680 420 S880 480 1010 520" fill="none" stroke="#3fbf6a" style="stroke-width:1.1;stroke-dasharray:3 9;animation:drift 34s linear infinite;"></path>
     <path d="M610 300 C690 300 730 250 830 240 S950 230 1010 225" fill="none" stroke="#9b6cff" style="stroke-width:1;stroke-dasharray:2 8;animation:drift 42s linear infinite;"></path>
-    <path d="M140 300 C220 300 250 390 330 450 S470 560 560 610" fill="none" stroke="#ff9a1f" style="stroke-width:.9;stroke-dasharray:2 8;animation:drift 46s linear infinite;"></path>
+    <path d="M140 300 C220 300 250 390 330 450 S470 560 560 610" fill="none" stroke="rgb(var(--a))" style="stroke-width:.9;stroke-dasharray:2 8;animation:drift 46s linear infinite;"></path>
   </svg>
-  <div style="position:absolute;inset:0;pointer-events:none;opacity:.12;background-image:repeating-linear-gradient(0deg,rgba(255,170,70,.55) 0 1px,transparent 1px 4px);mix-blend-mode:screen;"></div>
-  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 60% at 50% 50%,transparent 40%,rgba(8,4,1,.8) 100%);"></div>
+  <div style="position:absolute;inset:0;pointer-events:none;opacity:.12;background-image:repeating-linear-gradient(0deg,rgba(var(--a),.55) 0 1px,transparent 1px 4px);mix-blend-mode:screen;"></div>
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 60% at 50% 50%,transparent 40%,rgba(var(--ink2),.8) 100%);"></div>
 
   <!-- TVA header -->
   <header style="position:absolute;left:0;right:0;top:clamp(12px,3vh,28px);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 16px;">
     <svg aria-hidden="true" viewBox="0 0 64 40" style="{{ logoStyle }}">
-      <rect x="2" y="2" width="60" height="36" rx="6" fill="#2a1608" stroke="#ff9a1f" style="stroke-width:3;"></rect>
-      <path d="M10 11 H24 M17 11 V30 M27 11 L33 30 L39 11 M42 30 L48 11 L54 30 M45 23 H51" fill="none" stroke="#ffcf7a" style="stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;"></path>
+      <rect x="2" y="2" width="60" height="36" rx="6" fill="rgb(var(--ink))" stroke="rgb(var(--a))" style="stroke-width:3;"></rect>
+      <path d="M10 11 H24 M17 11 V30 M27 11 L33 30 L39 11 M42 30 L48 11 L54 30 M45 23 H51" fill="none" stroke="rgb(var(--soft))" style="stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;"></path>
     </svg>
     <div style="display:flex;flex-direction:column;gap:3px;">
       <span style="{{ orgStyle }}">Time Variance Authority</span>
@@ -61,16 +64,17 @@
   <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:{{ stackGap }};max-width:100%;">
 
     <sc-if value="{{ showDate }}" hint-placeholder-val="{{ true }}">
-      <div style="display:flex;align-items:center;gap:14px;color:#ffc979;max-width:100%;">
-        <span style="display:block;width:26px;height:1px;flex:none;background:linear-gradient(90deg,transparent,#ff9a1f);"></span>
-        <span style="font-weight:300;text-transform:uppercase;letter-spacing:.3em;font-size:{{ dateSize }};text-shadow:0 0 12px rgba(255,154,31,.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ dateStr }}</span>
-        <span style="display:block;width:26px;height:1px;flex:none;background:linear-gradient(270deg,transparent,#ff9a1f);"></span>
+      <div style="display:flex;align-items:center;gap:14px;color:rgb(var(--soft));max-width:100%;">
+        <span style="display:block;width:26px;height:1px;flex:none;background:linear-gradient(90deg,transparent,rgb(var(--a)));"></span>
+        <span style="font-weight:300;text-transform:uppercase;letter-spacing:.3em;font-size:{{ dateSize }};text-shadow:0 0 12px rgba(var(--a),.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ dateStr }}</span>
+        <span style="display:block;width:26px;height:1px;flex:none;background:linear-gradient(270deg,transparent,rgb(var(--a)));"></span>
       </div>
     </sc-if>
 
-    <!-- Miss Minutes + speech bubble -->
+    <!-- Host (Miss Minutes or the selected character) + speech bubble -->
     <sc-if value="{{ showMissMinutes }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;align-items:center;justify-content:center;gap:{{ mmGap }};max-width:100%;">
+        <sc-if value="{{ isMiss }}">
         <svg role="img" aria-label="Miss Minutes, the TVA's animated clock mascot" viewBox="0 0 120 150" style="{{ mmStyle }}">
           <defs>
             <radialGradient id="mmFace" cx="50%" cy="40%" r="60%">
@@ -128,7 +132,118 @@
           <ellipse cx="84" cy="75" rx="5.5" ry="3.4" fill="#ff6f61" style="opacity:.5;"></ellipse>
           <path d="M45 76 Q60 100 75 76 Q60 81 45 76 Z" fill="#3a0d05" stroke="#1a0d05" style="stroke-width:1.6;stroke-linejoin:round;"></path>
           <path d="M53 85 Q60 80.5 67 85 Q60 88.5 53 85 Z" fill="#e2554a"></path>
+        </sc-if>
+
+        <!-- Optional photo from assets/cast/<id>.jpg, shown once it loads -->
+        <sc-if value="{{ showPhoto }}">
+          <div role="img" aria-label="{{ portraitLabel }}" style="{{ photoStyle }}"></div>
+        </sc-if>
+
+        <!-- Original cartoon portraits (also the fallback when no photo exists) -->
+        <sc-if value="{{ showDrawing }}">
+        <svg role="img" aria-label="{{ portraitLabel }}" viewBox="0 0 120 150" style="{{ mmStyle }}">
+          <sc-if value="{{ portrait.loki }}">
+            <path d="M36 66 Q36 38 60 38 Q84 38 84 66 L86 106 Q80 108 76 102 L78 68 Q60 52 42 68 L44 102 Q40 108 34 106 Z" fill="#15100c"></path>
+            <path d="M16 150 Q18 114 60 110 Q102 114 104 150 Z" fill="#2f7a45" stroke="#14301c" style="stroke-width:1.5;"></path>
+            <path d="M44 112 L60 128 L76 112 L70 110 L60 120 L50 110 Z" fill="#d9a441" stroke="#7a5410" style="stroke-width:1.2;"></path>
+            <path d="M52 94 H68 V112 H52 Z" fill="#ead0b6"></path>
+            <ellipse cx="60" cy="72" rx="23" ry="27" fill="#f1d6bc" stroke="#7a5a44" style="stroke-width:1.2;"></ellipse>
+            <path d="M42 52 C30 44 24 30 28 12 C34 28 40 38 50 46 Z M78 52 C90 44 96 30 92 12 C86 28 80 38 70 46 Z" fill="#e8b23a" stroke="#7a5410" style="stroke-width:1.4;stroke-linejoin:round;"></path>
+            <path d="M37 58 Q60 40 83 58 L81 64 Q60 50 39 64 Z" fill="#e8b23a" stroke="#7a5410" style="stroke-width:1.4;stroke-linejoin:round;"></path>
+            <path d="M45 67 L56 69 M64 69 L75 66" fill="none" stroke="#15100c" style="stroke-width:2;stroke-linecap:round;"></path>
+            <ellipse cx="51" cy="75" rx="2.6" ry="3.2" fill="#1d3a26"></ellipse>
+            <ellipse cx="69" cy="75" rx="2.6" ry="3.2" fill="#1d3a26"></ellipse>
+            <path d="M52 88 Q61 92 69 85" fill="none" stroke="#6a3a2a" style="stroke-width:2;stroke-linecap:round;"></path>
+          </sc-if>
+          <sc-if value="{{ portrait.hwr }}">
+            <path d="M16 150 Q18 114 60 110 Q102 114 104 150 Z" fill="#5b3aa0" stroke="#2a1850" style="stroke-width:1.5;"></path>
+            <path d="M52 94 H68 V112 H52 Z" fill="#b8866a"></path>
+            <path d="M36 114 Q38 96 50 100 L60 120 L70 100 Q82 96 84 114 L76 118 L60 130 L44 118 Z" fill="#7a55d6" stroke="#c9b3ff" style="stroke-width:1.4;stroke-linejoin:round;"></path>
+            <ellipse cx="60" cy="72" rx="23" ry="27" fill="#c99576" stroke="#6a4430" style="stroke-width:1.2;"></ellipse>
+            <path d="M36 70 Q33 44 60 40 Q87 44 84 70 Q82 56 74 52 Q66 48 60 50 Q52 48 46 52 Q38 56 36 70 Z" fill="#1e140e"></path>
+            <circle cx="42" cy="50" r="6" fill="#1e140e"></circle><circle cx="50" cy="43" r="6" fill="#1e140e"></circle>
+            <circle cx="60" cy="40" r="6.5" fill="#1e140e"></circle><circle cx="70" cy="43" r="6" fill="#1e140e"></circle>
+            <circle cx="78" cy="50" r="6" fill="#1e140e"></circle>
+            <path d="M46 67 Q51 64 56 67 M64 67 Q69 64 74 67" fill="none" stroke="#1e140e" style="stroke-width:2;stroke-linecap:round;"></path>
+            <ellipse cx="51" cy="74" rx="2.6" ry="3.2" fill="#1e140e"></ellipse>
+            <ellipse cx="69" cy="74" rx="2.6" ry="3.2" fill="#1e140e"></ellipse>
+            <path d="M51 86 Q60 93 69 86" fill="none" stroke="#5a2a1e" style="stroke-width:2;stroke-linecap:round;"></path>
+          </sc-if>
+          <sc-if value="{{ portrait.sylvie }}">
+            <path d="M35 64 Q35 38 60 38 Q85 38 85 64 L88 112 L76 108 L78 66 Q60 54 42 66 L44 108 L32 112 Z" fill="#e2bd62" stroke="#9a7a2a" style="stroke-width:1;"></path>
+            <path d="M16 150 Q18 114 60 110 Q102 114 104 150 Z" fill="#4a4a2a" stroke="#22220e" style="stroke-width:1.5;"></path>
+            <path d="M40 114 L60 130 L80 114" fill="none" stroke="#8a8a52" style="stroke-width:3;stroke-linecap:round;stroke-linejoin:round;"></path>
+            <path d="M52 94 H68 V112 H52 Z" fill="#ecd0b6"></path>
+            <ellipse cx="60" cy="72" rx="22" ry="26" fill="#f3d8bf" stroke="#8a6a54" style="stroke-width:1.2;"></ellipse>
+            <path d="M39 64 Q50 52 62 58 Q72 50 82 62 Q74 56 66 60 Q52 54 39 64 Z" fill="#e2bd62"></path>
+            <path d="M44 52 C38 42 36 30 40 16 C43 30 47 40 52 48 Z M76 52 C79 48 80 45 81 41 L76 43 C75 46 73 48 70 49 Z" fill="#e8b23a" stroke="#7a5410" style="stroke-width:1.4;stroke-linejoin:round;"></path>
+            <path d="M38 56 Q60 42 82 56 L81 61 Q60 49 39 61 Z" fill="#e8b23a" stroke="#7a5410" style="stroke-width:1.4;stroke-linejoin:round;"></path>
+            <path d="M46 68 L56 69 M64 69 L74 68" fill="none" stroke="#7a5a2a" style="stroke-width:1.8;stroke-linecap:round;"></path>
+            <ellipse cx="51" cy="75" rx="2.6" ry="3.2" fill="#2a2a1a"></ellipse>
+            <ellipse cx="69" cy="75" rx="2.6" ry="3.2" fill="#2a2a1a"></ellipse>
+            <path d="M54 88 L66 88" fill="none" stroke="#9a4a3a" style="stroke-width:2;stroke-linecap:round;"></path>
+          </sc-if>
+          <sc-if value="{{ portrait.mobius }}">
+            <path d="M16 150 Q18 114 60 110 Q102 114 104 150 Z" fill="#b08a5a" stroke="#5a4028" style="stroke-width:1.5;"></path>
+            <path d="M48 110 L60 128 L72 110 Z" fill="#f2ede2"></path>
+            <path d="M58 113 L62 113 L63.5 130 L60 135 L56.5 130 Z" fill="#6a3a20"></path>
+            <path d="M52 94 H68 V112 H52 Z" fill="#e0b898"></path>
+            <ellipse cx="60" cy="72" rx="23" ry="27" fill="#ecc7a8" stroke="#7a5a44" style="stroke-width:1.2;"></ellipse>
+            <path d="M37 64 Q37 42 60 40 Q83 42 83 64 Q79 52 60 50 Q41 52 37 64 Z" fill="#b8b4ac"></path>
+            <path d="M44 72 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0 Z M62 72 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0 Z M58 72 H62" fill="none" stroke="#2a1a0c" style="stroke-width:1.8;"></path>
+            <ellipse cx="51" cy="73" rx="2.4" ry="3" fill="#2a1a0c"></ellipse>
+            <ellipse cx="69" cy="73" rx="2.4" ry="3" fill="#2a1a0c"></ellipse>
+            <path d="M45 85 C50 79 56 79 60 82 C64 79 70 79 75 85 C70 84 66 87 60 87 C54 87 50 84 45 85 Z" fill="#a19c94" stroke="#6a665e" style="stroke-width:1;"></path>
+          </sc-if>
+          <sc-if value="{{ portrait.ravonna }}">
+            <path d="M16 150 Q18 114 60 110 Q102 114 104 150 Z" fill="#1e1a16" stroke="#000" style="stroke-width:1.5;"></path>
+            <path d="M42 112 L60 126 L78 112" fill="none" stroke="#e0c38c" style="stroke-width:4;stroke-linecap:round;stroke-linejoin:round;"></path>
+            <path d="M52 94 H68 V112 H52 Z" fill="#7a4e36"></path>
+            <ellipse cx="60" cy="72" rx="22" ry="26" fill="#8a5a3e" stroke="#4a2e1e" style="stroke-width:1.2;"></ellipse>
+            <path d="M35 74 Q33 40 60 38 Q87 40 85 74 L85 92 Q80 96 77 90 L78 64 Q68 52 46 58 L42 68 L43 90 Q40 96 35 92 Z" fill="#d8cdb5" stroke="#9a8e74" style="stroke-width:1;"></path>
+            <path d="M46 68 L56 67 M64 67 L74 68" fill="none" stroke="#3a2416" style="stroke-width:1.8;stroke-linecap:round;"></path>
+            <ellipse cx="51" cy="74" rx="2.6" ry="3.2" fill="#1a0e08"></ellipse>
+            <ellipse cx="69" cy="74" rx="2.6" ry="3.2" fill="#1a0e08"></ellipse>
+            <path d="M53 87 Q60 90 67 87" fill="none" stroke="#5a1e1a" style="stroke-width:2.2;stroke-linecap:round;"></path>
+          </sc-if>
+          <sc-if value="{{ portrait.b15 }}">
+            <path d="M16 150 Q18 114 60 110 Q102 114 104 150 Z" fill="#3a3a36" stroke="#161614" style="stroke-width:1.5;"></path>
+            <path d="M30 128 H90 M26 140 H94" fill="none" stroke="#ff6e32" style="stroke-width:3;opacity:.85;"></path>
+            <path d="M52 94 H68 V112 H52 Z" fill="#6a4230"></path>
+            <ellipse cx="60" cy="72" rx="22" ry="26" fill="#7a4e34" stroke="#3a2416" style="stroke-width:1.2;"></ellipse>
+            <path d="M38 64 Q38 43 60 42 Q82 43 82 64 Q76 51 60 50 Q44 51 38 64 Z" fill="#1a120c"></path>
+            <path d="M46 68 L56 70 M64 70 L74 68" fill="none" stroke="#1a120c" style="stroke-width:2.2;stroke-linecap:round;"></path>
+            <ellipse cx="51" cy="75" rx="2.6" ry="3" fill="#120a06"></ellipse>
+            <ellipse cx="69" cy="75" rx="2.6" ry="3" fill="#120a06"></ellipse>
+            <path d="M54 88 H66" fill="none" stroke="#3a1a10" style="stroke-width:2.2;stroke-linecap:round;"></path>
+            <path d="M86 150 L101 104" fill="none" stroke="#4a3420" style="stroke-width:6;stroke-linecap:round;"></path>
+            <circle cx="102" cy="100" r="5" fill="#ff9a1f" style="filter:drop-shadow(0 0 4px #ff9a1f);"></circle>
+          </sc-if>
+          <sc-if value="{{ portrait.ob }}">
+            <path d="M16 150 Q18 114 60 110 Q102 114 104 150 Z" fill="#2d7a60" stroke="#123a2c" style="stroke-width:1.5;"></path>
+            <path d="M46 110 L60 126 L74 110 Z" fill="#e8e2c8"></path>
+            <path d="M52 94 H68 V112 H52 Z" fill="#98623e"></path>
+            <ellipse cx="60" cy="72" rx="23" ry="27" fill="#a8714e" stroke="#5a3a24" style="stroke-width:1.2;"></ellipse>
+            <path d="M37 66 Q33 40 60 39 Q87 40 83 66 L80 54 L74 58 L70 48 L62 55 L56 46 L50 55 L44 49 L41 58 Z" fill="#5a3a24"></path>
+            <path d="M44 73 a6.5 6.5 0 1 0 13 0 a6.5 6.5 0 1 0 -13 0 Z M63 73 a6.5 6.5 0 1 0 13 0 a6.5 6.5 0 1 0 -13 0 Z M57 73 H63" fill="none" stroke="#1a120a" style="stroke-width:1.8;"></path>
+            <ellipse cx="50.5" cy="73.5" rx="2.4" ry="3" fill="#1a120a"></ellipse>
+            <ellipse cx="69.5" cy="73.5" rx="2.4" ry="3" fill="#1a120a"></ellipse>
+            <path d="M49 85 Q60 96 71 85 Q60 89 49 85 Z" fill="#3a1a10" stroke="#3a1a10" style="stroke-width:1.2;stroke-linejoin:round;"></path>
+          </sc-if>
+          <sc-if value="{{ portrait.gator }}">
+            <path d="M22 150 Q26 114 58 108 Q92 112 98 150 Z" fill="#4a8c30" stroke="#2a5a1a" style="stroke-width:1.5;"></path>
+            <path d="M16 98 L104 94 Q109 102 98 106 L40 110 Q18 110 16 98 Z" fill="#4a8c30" stroke="#2a5a1a" style="stroke-width:1.5;"></path>
+            <path d="M14 96 Q14 72 44 70 L104 80 Q114 87 105 93 L44 98 Z" fill="#5aa83c" stroke="#2a5a1a" style="stroke-width:1.5;stroke-linejoin:round;"></path>
+            <path d="M50 97 l3 5 l3 -5 l3 5 l3 -5 l3 5 l3 -5 l3 5 l3 -5 l3 5 l3 -5 l3 5 l3 -5" fill="none" stroke="#fffdf6" style="stroke-width:1.6;stroke-linejoin:round;"></path>
+            <circle cx="38" cy="72" r="10" fill="#5aa83c" stroke="#2a5a1a" style="stroke-width:1.5;"></circle>
+            <circle cx="39" cy="70" r="5.5" fill="#e8d84a"></circle>
+            <path d="M39 65.5 V74.5" fill="none" stroke="#1a2a0a" style="stroke-width:2;stroke-linecap:round;"></path>
+            <circle cx="100" cy="83" r="1.8" fill="#1a2a0a"></circle>
+            <path d="M58 78 h4 M68 80 h4 M78 82 h4" fill="none" stroke="#2a5a1a" style="stroke-width:1.4;stroke-linecap:round;"></path>
+            <path d="M30 66 C20 58 18 46 22 36 C26 46 30 54 38 60 Z M46 62 C46 50 52 40 60 36 C58 46 56 54 54 64 Z" fill="#e8b23a" stroke="#7a5410" style="stroke-width:1.4;stroke-linejoin:round;"></path>
+          </sc-if>
         </svg>
+        </sc-if>
 
         <div aria-live="polite" style="{{ bubbleStyle }}">
           <span style="{{ bubbleTailStyle }}"></span>
@@ -144,8 +259,8 @@
       <div style="display:flex;align-items:stretch;gap:{{ gap }};">
         <sc-for list="{{ hourCards }}" as="c">
           <div style="{{ cardBox }}">
-            <div style="position:relative;width:100%;height:100%;display:grid;place-items:center;border-radius:14px;background:linear-gradient(180deg,rgba(255,154,31,.16),rgba(30,16,6,.8) 46%,rgba(14,7,2,.94));border:1px solid rgba(255,154,31,.3);box-shadow:0 0 0 4px rgba(58,34,16,.9),0 0 0 5px rgba(255,154,31,.18),0 0 0 1px rgba(0,0,0,.5) inset,0 24px 60px -30px rgba(255,154,31,.7);overflow:hidden;">
-              <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(10,5,1,.9);"></div>
+            <div style="position:relative;width:100%;height:100%;display:grid;place-items:center;border-radius:14px;background:linear-gradient(180deg,rgba(var(--a),.16),rgba(var(--ink2),.8) 46%,rgba(var(--ink2),.94));border:1px solid rgba(var(--a),.3);box-shadow:0 0 0 4px rgba(var(--ink),.9),0 0 0 5px rgba(var(--a),.18),0 0 0 1px rgba(0,0,0,.5) inset,0 24px 60px -30px rgba(var(--a),.7);overflow:hidden;">
+              <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(var(--ink2),.9);"></div>
               <span style="{{ c.flip }}">{{ c.d }}</span>
             </div>
           </div>
@@ -158,8 +273,8 @@
         </div>
         <sc-for list="{{ minuteCards }}" as="c">
           <div style="{{ cardBox }}">
-            <div style="position:relative;width:100%;height:100%;display:grid;place-items:center;border-radius:14px;background:linear-gradient(180deg,rgba(255,154,31,.16),rgba(30,16,6,.8) 46%,rgba(14,7,2,.94));border:1px solid rgba(255,154,31,.3);box-shadow:0 0 0 4px rgba(58,34,16,.9),0 0 0 5px rgba(255,154,31,.18),0 0 0 1px rgba(0,0,0,.5) inset,0 24px 60px -30px rgba(255,154,31,.7);overflow:hidden;">
-              <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(10,5,1,.9);"></div>
+            <div style="position:relative;width:100%;height:100%;display:grid;place-items:center;border-radius:14px;background:linear-gradient(180deg,rgba(var(--a),.16),rgba(var(--ink2),.8) 46%,rgba(var(--ink2),.94));border:1px solid rgba(var(--a),.3);box-shadow:0 0 0 4px rgba(var(--ink),.9),0 0 0 5px rgba(var(--a),.18),0 0 0 1px rgba(0,0,0,.5) inset,0 24px 60px -30px rgba(var(--a),.7);overflow:hidden;">
+              <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(var(--ink2),.9);"></div>
               <span style="{{ c.flip }}">{{ c.d }}</span>
             </div>
           </div>
@@ -187,19 +302,29 @@
         </sc-for>
       </div>
       <div style="display:flex;justify-content:space-between;gap:12px;font-size:{{ labelSize }};letter-spacing:.24em;text-transform:uppercase;font-weight:500;">
-        <span style="color:rgba(255,201,121,.7);white-space:nowrap;">Sacred Timeline</span>
+        <span style="color:rgba(var(--soft),.7);white-space:nowrap;">Sacred Timeline</span>
         <span style="{{ nexusStyle }}">{{ nexusText }}</span>
       </div>
     </div>
 
-    <!-- The cast: one variant is "on duty" each minute -->
+    <!-- The cast: tap one to switch theme and host; one variant is "on duty" each minute -->
     <sc-if value="{{ showCast }}" hint-placeholder-val="{{ true }}">
       <div aria-label="TVA cast" style="{{ castRowStyle }}">
         <sc-for list="{{ cast }}" as="m">
-          <div title="{{ m.name }} · {{ m.role }}" style="{{ m.cellStyle }}">
+          <button type="button" class="tva-badge" title="{{ m.name }} · {{ m.role }}" aria-label="{{ m.label }}" aria-pressed="{{ m.pressed }}" onclick="{{ m.select }}" style="{{ m.cellStyle }}">
             <div style="{{ m.badgeStyle }}">
               <!-- Original, simplified emblems on a 48x48 grid -->
               <svg aria-hidden="true" viewBox="0 0 48 48" style="width:72%;height:72%;overflow:visible;stroke-linecap:round;stroke-linejoin:round;">
+                <sc-if value="{{ m.icon.miss }}">
+                  <circle cx="24" cy="24" r="19" fill="#ee8424" stroke="#6e2e0c" style="stroke-width:2;"></circle>
+                  <circle cx="24" cy="24" r="15" fill="#ffc35a"></circle>
+                  <path d="M24 17 V11 M24 17 L29 14" fill="none" stroke="#1a0d05" style="stroke-width:1.6;"></path>
+                  <ellipse cx="19.5" cy="23" rx="3" ry="4" fill="#fffdf6" stroke="#1a0d05" style="stroke-width:1;"></ellipse>
+                  <ellipse cx="28.5" cy="23" rx="3" ry="4" fill="#fffdf6" stroke="#1a0d05" style="stroke-width:1;"></ellipse>
+                  <ellipse cx="20" cy="24" rx="1.6" ry="2.4" fill="#1a0d05"></ellipse>
+                  <ellipse cx="28" cy="24" rx="1.6" ry="2.4" fill="#1a0d05"></ellipse>
+                  <path d="M18 30 Q24 36 30 30 Q24 32 18 30 Z" fill="#3a0d05" stroke="#1a0d05" style="stroke-width:1;"></path>
+                </sc-if>
                 <sc-if value="{{ m.icon.loki }}">
                   <path d="M16 19 C9 15 5 9 7 2 C11 8 15 11 21 14 Z M32 19 C39 15 43 9 41 2 C37 8 33 11 27 14 Z M13 42 V27 Q13 13 24 13 Q35 13 35 27 V42 H29 V29 Q29 21 24 21 Q19 21 19 29 V42 Z" fill="#e8b23a" stroke="#7a5410" style="stroke-width:1.5;"></path>
                 </sc-if>
@@ -243,14 +368,14 @@
             <sc-if value="{{ showRoles }}">
               <span style="{{ m.roleStyle }}">{{ m.tag }}</span>
             </sc-if>
-          </div>
+          </button>
         </sc-for>
       </div>
     </sc-if>
 
   </div>
 
-  <footer style="position:absolute;left:0;right:0;bottom:clamp(10px,2.4vh,24px);text-align:center;font-weight:300;font-size:clamp(10px,1.5vw,12px);letter-spacing:.32em;text-transform:uppercase;color:rgba(255,201,121,.55);">Stephen Abueva &nbsp;|&nbsp; {{ year }}</footer>
+  <footer style="position:absolute;left:0;right:0;bottom:clamp(10px,2.4vh,24px);text-align:center;font-weight:300;font-size:clamp(10px,1.5vw,12px);letter-spacing:.32em;text-transform:uppercase;color:rgba(var(--soft),.55);">Stephen Abueva &nbsp;|&nbsp; {{ year }}</footer>
 </div>
 
 </x-dc>
@@ -258,11 +383,13 @@
 // ---- Theme ---------------------------------------------------------------
 const TVA = Object.freeze({
   amber: '#ff9a1f',
-  amberSoft: 'rgba(255,154,31,',
   cream: '#ffe9c7',
-  ink: '#2a1608',
   alert: '#ff5a3c'
 });
+
+// A palette re-colors the whole page through CSS custom properties.
+// Channels are "r,g,b" so the template can use rgba(var(--a), alpha).
+const palette = (a, hi, soft, ink, ink2, bg) => Object.freeze({ a, hi, soft, ink, ink2, bg: Object.freeze(bg) });
 
 // Seconds between speech-bubble lines.
 const LINE_PERIOD_S = 15;
@@ -271,52 +398,95 @@ const NEXUS_ALERT_S = 3;
 // Cast badge cell widths (px) and the gap between cells.
 const CAST_CELL = Object.freeze({ full: 92, compact: 72 });
 const CAST_GAP = 6;
+// Optional character photos live at assets/cast/<id>.jpg. Ids come from the
+// fixed cast list below, never from user input.
+const PHOTO_DIR = 'assets/cast/';
+const photoUrl = (id) => PHOTO_DIR + encodeURIComponent(id) + '.jpg';
+// localStorage key for the chosen character (a per-viewer convenience).
+const STORAGE_KEY = 'tva-clock:character';
 
 // ---- Cast ----------------------------------------------------------------
-// Icons live in the template (cast row). Lines are original, written
-// in each character's spirit rather than quoted from the show.
+// Emblems and portraits are original drawings in the template. Lines are
+// original, written in each character's spirit rather than quoted.
+// `{t}` in a timeLine is replaced with the current time.
+const MISS_MINUTES = Object.freeze({
+  id: 'miss', name: 'Miss Minutes', role: 'TVA mascot & host', tag: 'Host', color: TVA.amber,
+  theme: palette('255,154,31', '255,181,71', '255,201,121', '58,34,16', '20,10,3', ['#3a2210', '#1d1008', '#0d0703']),
+  lines: Object.freeze([
+    "Hey y'all! It's {t} on the Sacred Timeline.",
+    'Right on schedule! It is {t}, sugar.',
+    'Tick tock! {t}, and not a branch out of place.',
+    "It's {t}. Remember, the TVA is always watching the clock!"
+  ])
+});
+
 const CAST = Object.freeze([
   {
     id: 'loki', name: 'Loki', role: 'Variant L1130', tag: 'Variant', color: '#3fbf6a',
+    theme: palette('63,191,106', '232,200,110', '200,232,170', '14,40,22', '5,16,9', ['#12361f', '#0a1d11', '#040b06']),
+    timeLine: 'It is {t}. You are welcome.',
     lines: ['Glorious purpose, now with a strict schedule.', 'I was burdened with glorious punctuality.', 'Time is a construct. Mine, ideally.']
   },
   {
     id: 'hwr', name: 'He Who Remains', role: 'Keeper of the Citadel', tag: 'End of Time', color: '#9b6cff',
+    theme: palette('155,108,255', '196,170,255', '214,196,255', '32,20,58', '10,6,20', ['#2a1a4a', '#140c26', '#07040f']),
+    timeLine: "It's {t}. I already knew that, of course.",
     lines: ['I have seen every minute. This one is fine.', 'Try not to break the timeline before lunch.', 'Every clock ends up in my Citadel eventually.']
   },
   {
     id: 'sylvie', name: 'Sylvie', role: 'Variant on the run', tag: 'Variant', color: '#d9a441',
+    theme: palette('217,164,65', '240,200,110', '214,228,170', '36,34,14', '12,11,4', ['#2e2a12', '#171508', '#0a0903']),
+    timeLine: "{t}. Don't get comfortable.",
     lines: ['Keep your schedule. I will keep my own.', 'Every second is a choice. Make a good one.', 'No one prunes me before my coffee.']
   },
   {
     id: 'mobius', name: 'Mobius', role: 'Agent, Variant Analyst', tag: 'Agent', color: '#c98a4a',
+    theme: palette('201,138,74', '232,180,120', '236,214,180', '46,32,20', '14,10,6', ['#33251a', '#1a120c', '#0b0806']),
+    timeLine: "Hey, it's {t}. Time for a break-room salad.",
     lines: ['Plenty of time left for jet ski research.', 'Clock checks out. Want a salad from the break room?', 'I just love a well-kept timeline.']
   },
   {
     id: 'ravonna', name: 'Ravonna', role: 'Judge Renslayer', tag: 'Judge', color: '#e0c38c',
+    theme: palette('224,195,140', '245,225,180', '240,228,205', '44,38,30', '12,11,9', ['#2c2824', '#16130f', '#090806']),
+    timeLine: 'The court records the time as {t}.',
     lines: ['This minute has been reviewed and approved.', 'Order in the timeline, please.', 'Court is adjourned until the next tick.']
   },
   {
-    id: 'b15', name: 'Hunter B-15', role: 'Minuteman squad leader', tag: 'Minuteman', color: '#ff9a1f',
+    id: 'b15', name: 'Hunter B-15', role: 'Minuteman squad leader', tag: 'Minuteman', color: '#ff6e32',
+    theme: palette('255,110,50', '255,160,100', '255,204,176', '52,20,8', '16,6,2', ['#3a160a', '#1d0b05', '#0d0402']),
+    timeLine: 'Time check: {t}. All units, hold.',
     lines: ['Minutemen, hold position. Clock is secure.', 'No nexus events on my watch.', 'Reset charges armed. Kidding. Mostly.']
   },
   {
     id: 'ob', name: 'OB', role: 'Ouroboros, Repair & Advancement', tag: 'Tech', color: '#6fd4b0',
+    theme: palette('111,212,176', '160,235,205', '204,240,226', '12,42,34', '4,14,11', ['#0f3029', '#081a16', '#030b09']),
+    timeLine: 'Per my calibration, it is exactly {t}!',
     lines: ['Per the manual, a clock should tick. This one does.', 'I wrote the guide on this. Chapter 9, page 4.', 'Temporal loom readings look great today!']
   },
   {
     id: 'gator', name: 'Alligator Loki', role: 'Variant, very green', tag: 'Variant', color: '#5aa83c',
+    theme: palette('90,168,60', '150,214,100', '220,232,150', '22,42,14', '7,14,4', ['#1f3a14', '#0f1d0a', '#060c04']),
+    timeLine: '*hiss* (he thinks it is {t})',
     lines: ['*hiss* (he ate the snooze button)', '*chomp* (that was the alarm)', '*tail swish* (he approves of this minute)']
   }
-]);
+].map((m) => Object.freeze({ ...m, lines: Object.freeze(m.lines) })));
 
-// Miss Minutes hosts. `{t}` is replaced with the current time.
-const MISS_LINES = Object.freeze([
-  "Hey y'all! It's {t} on the Sacred Timeline.",
-  'Right on schedule! It is {t}, sugar.',
-  'Tick tock! {t}, and not a branch out of place.',
-  "It's {t}. Remember, the TVA is always watching the clock!"
-]);
+// Everyone who can be picked from the cast row, keyed by id.
+const CHARACTERS = Object.freeze([MISS_MINUTES, ...CAST]);
+const CHARACTER_BY_ID = Object.freeze(Object.fromEntries(CHARACTERS.map((c) => [c.id, c])));
+
+// Reads the saved character; storage can be unavailable or hold junk.
+const loadCharacter = () => {
+  try {
+    const id = window.localStorage.getItem(STORAGE_KEY);
+    return Object.prototype.hasOwnProperty.call(CHARACTER_BY_ID, id) ? id : MISS_MINUTES.id;
+  } catch (e) {
+    return MISS_MINUTES.id;
+  }
+};
+const saveCharacter = (id) => {
+  try { window.localStorage.setItem(STORAGE_KEY, id); } catch (e) { /* storage blocked: keep in-memory choice */ }
+};
 
 const pad2 = (n) => String(n).padStart(2, '0');
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
@@ -329,10 +499,12 @@ const handStyle = (deg, width) => ({
 });
 
 class Component extends DCLogic {
-  state = { now: new Date(), keys: [0,0,0,0,0,0], w: 1200, h: 800 };
+  // photos: id -> 'ok' | 'missing' once probed.
+  state = { now: new Date(), keys: [0,0,0,0,0,0], w: 1200, h: 800, selected: loadCharacter(), photos: {} };
 
   componentDidMount() {
     this.prev = null;
+    this.probePhoto(this.state.selected);
     this.measure();
     this.ro = () => this.measure();
     window.addEventListener('resize', this.ro);
@@ -341,6 +513,7 @@ class Component extends DCLogic {
     this.tick();
   }
   componentWillUnmount() {
+    this.unmounted = true;
     clearInterval(this.timer);
     window.removeEventListener('resize', this.ro);
     window.removeEventListener('orientationchange', this.ro);
@@ -377,18 +550,49 @@ class Component extends DCLogic {
     this.setState({ now, keys });
   }
 
+  select(id) {
+    if (!Object.prototype.hasOwnProperty.call(CHARACTER_BY_ID, id)) return;
+    saveCharacter(id);
+    this.setState({ selected: id });
+    this.probePhoto(id);
+  }
+
+  // Checks once per character whether a photo file exists; the drawing is
+  // shown until (and unless) it loads.
+  probePhoto(id) {
+    if (id === MISS_MINUTES.id || this.state.photos[id] || (this.probing && this.probing[id])) return;
+    this.probing = { ...this.probing, [id]: true };
+    const img = new Image();
+    const done = (status) => {
+      if (this.unmounted) return;
+      this.setState({ photos: { ...this.state.photos, [id]: status } });
+    };
+    img.onload = () => done('ok');
+    img.onerror = () => done('missing');
+    img.src = photoUrl(id);
+  }
+
   // The cast member "on duty" rotates every minute of the day.
   dutyIndex(now) {
     return (now.getHours() * 60 + now.getMinutes()) % CAST.length;
   }
 
-  // Alternates Miss Minutes' announcements with a line from whoever is on duty.
-  speech(now) {
+  // Miss Minutes alternates her announcements with a line from whoever is
+  // on duty; any other selected character alternates a time check with
+  // their own lines.
+  speech(now, host) {
     const slot = Math.floor(now.getSeconds() / LINE_PERIOD_S);
     const minuteOfDay = now.getHours() * 60 + now.getMinutes();
+    const t = this.shortTime(now);
+    if (host.id !== MISS_MINUTES.id) {
+      const text = slot % 2 === 0
+        ? host.timeLine
+        : host.lines[(minuteOfDay + (slot - 1) / 2) % host.lines.length];
+      return { speaker: host.name, line: text.replace('{t}', t), color: host.color };
+    }
     if (slot % 2 === 0) {
-      const text = MISS_LINES[(minuteOfDay + slot / 2) % MISS_LINES.length];
-      return { speaker: 'Miss Minutes', line: text.replace('{t}', this.shortTime(now)), color: TVA.amber };
+      const text = host.lines[(minuteOfDay + slot / 2) % host.lines.length];
+      return { speaker: host.name, line: text.replace('{t}', t), color: host.color };
     }
     const member = CAST[this.dutyIndex(now)];
     const text = member.lines[(minuteOfDay + (slot - 1) / 2) % member.lines.length];
@@ -410,7 +614,7 @@ class Component extends DCLogic {
     // The cast wraps onto as many rows as the width needs.
     const castHeight = (cellW, rowH) => {
       const perRow = Math.max(1, Math.floor((avail + CAST_GAP) / (cellW + CAST_GAP)));
-      return showCast ? Math.ceil(CAST.length / perRow) * rowH : 0;
+      return showCast ? Math.ceil(CHARACTERS.length / perRow) * rowH : 0;
     };
 
     // Shrink the mascot and cast before letting the digits get cramped.
@@ -441,7 +645,7 @@ class Component extends DCLogic {
     const flip = (i) => ({
       display: 'block', fontWeight: 500, lineHeight: 1,
       color: '#fff3dd', letterSpacing: '-0.02em',
-      textShadow: '0 0 6px rgba(255,154,31,.95), 0 0 22px rgba(255,154,31,.6), 0 0 60px rgba(255,120,20,.3)',
+      textShadow: '0 0 6px rgba(var(--a),.95), 0 0 22px rgba(var(--a),.6), 0 0 60px rgba(var(--a),.3)',
       animation: `dig${keys[i] % 2 ? 'A' : 'B'} 480ms cubic-bezier(.16,.84,.24,1)`,
       transformOrigin: '50% 0%'
     });
@@ -450,8 +654,8 @@ class Component extends DCLogic {
     const secSize = Math.round(card * (stack ? 0.44 : 0.38));
     const secStyle = {
       fontSize: secSize + 'px', fontWeight: 300, lineHeight: 1,
-      color: 'rgba(255,170,70,.85)', letterSpacing: '-0.01em',
-      textShadow: '0 0 14px rgba(255,154,31,.5)',
+      color: 'rgba(var(--a),.85)', letterSpacing: '-0.01em',
+      textShadow: '0 0 14px rgba(var(--a),.5)',
       fontVariantNumeric: 'tabular-nums'
     };
 
@@ -463,38 +667,47 @@ class Component extends DCLogic {
     const nexus = sec < NEXUS_ALERT_S && keys[3] > 0;
     const nexusAnim = keys[3] > 0 ? `nex${keys[3] % 2 ? 'A' : 'B'} 700ms ease-out` : 'none';
 
-    const duty = this.dutyIndex(now);
-    const talk = this.speech(now);
+    const host = CHARACTER_BY_ID[this.state.selected] || MISS_MINUTES;
+    const theme = host.theme;
+    const duty = CAST[this.dutyIndex(now)].id;
+    const talk = this.speech(now, host);
     const labelSize = Math.round(clamp(card * 0.075, 9, 12)) + 'px';
     const badge = compact ? 34 : 46;
 
-    const cast = CAST.map((m, i) => {
-      const on = i === duty;
+    const cast = CHARACTERS.map((m) => {
+      const picked = m.id === host.id;
+      const onDuty = m.id === duty;
+      const on = picked || onDuty;
       return {
         name: m.name, role: m.role, icon: { [m.id]: true },
-        tag: on ? 'On duty' : m.tag,
+        tag: onDuty ? 'On duty' : m.tag,
+        pressed: picked ? 'true' : 'false',
+        label: 'Switch to ' + m.name + ' theme',
+        select: () => this.select(m.id),
         cellStyle: {
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px',
           flex: 'none', width: (compact ? CAST_CELL.compact : CAST_CELL.full) + 'px', textAlign: 'center',
-          opacity: on ? 1 : 0.72, transition: 'opacity .4s'
+          opacity: on ? 1 : 0.72, transition: 'opacity .4s',
+          background: 'none', border: 0, padding: '2px 0', margin: 0, font: 'inherit', color: 'inherit',
+          cursor: 'pointer', borderRadius: '10px'
         },
         badgeStyle: {
           width: badge + 'px', height: badge + 'px', borderRadius: '50%',
           display: 'grid', placeItems: 'center',
-          background: `radial-gradient(circle at 50% 35%, ${m.color}33, ${TVA.ink} 70%)`,
-          border: `2px solid ${on ? m.color : 'rgba(255,201,121,.22)'}`,
-          boxShadow: on ? `0 0 0 3px ${m.color}33, 0 0 22px ${m.color}aa` : 'none',
-          transform: on ? 'translateY(-3px) scale(1.06)' : 'none',
+          background: `radial-gradient(circle at 50% 35%, ${m.color}33, ${'rgb(var(--ink))'} 70%)`,
+          border: `2px solid ${on ? m.color : 'rgba(var(--soft),.22)'}`,
+          boxShadow: picked ? `0 0 0 4px ${m.color}55, 0 0 26px ${m.color}` : onDuty ? `0 0 0 3px ${m.color}22, 0 0 14px ${m.color}77` : 'none',
+          transform: picked ? 'translateY(-4px) scale(1.12)' : 'none',
           transition: 'transform .4s, box-shadow .4s, border-color .4s'
         },
         nameStyle: {
           fontSize: (compact ? 9 : 10.5) + 'px', fontWeight: 700, letterSpacing: '.06em',
-          textTransform: 'uppercase', color: on ? '#fff3dd' : 'rgba(255,233,199,.8)',
+          textTransform: 'uppercase', color: picked ? m.color : on ? '#fff3dd' : 'rgba(255,233,199,.8)',
           lineHeight: 1.2
         },
         roleStyle: {
           fontSize: '9px', letterSpacing: '.14em', textTransform: 'uppercase',
-          color: on ? m.color : 'rgba(255,201,121,.5)', fontWeight: on ? 700 : 300
+          color: onDuty ? m.color : 'rgba(var(--soft),.5)', fontWeight: onDuty ? 700 : 300
         }
       };
     });
@@ -502,6 +715,25 @@ class Component extends DCLogic {
     const mmW = Math.round(mascotH * 0.8);
 
     return {
+      rootStyle: {
+        '--a': theme.a, '--hi': theme.hi, '--soft': theme.soft, '--ink': theme.ink, '--ink2': theme.ink2,
+        position: 'fixed', inset: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center', padding: '24px 16px',
+        fontFamily: "'JetBrains Mono',ui-monospace,monospace", color: TVA.cream,
+        background: `radial-gradient(115% 85% at 50% 8%,${theme.bg[0]} 0%,${theme.bg[1]} 45%,${theme.bg[2]} 100%)`
+      },
+      isMiss: host.id === MISS_MINUTES.id,
+      showPhoto: host.id !== MISS_MINUTES.id && this.state.photos[host.id] === 'ok',
+      showDrawing: host.id !== MISS_MINUTES.id && this.state.photos[host.id] !== 'ok',
+      photoStyle: {
+        width: Math.round(mascotH * 0.8) + 'px', height: mascotH + 'px', flex: 'none',
+        borderRadius: '14px', backgroundColor: 'rgb(var(--ink))',
+        backgroundImage: `url("${photoUrl(host.id)}")`, backgroundSize: 'cover', backgroundPosition: 'center top',
+        border: `2px solid ${host.color}`,
+        boxShadow: `0 0 0 4px ${host.color}33, 0 10px 30px -10px ${host.color}`
+      },
+      portrait: { [host.id]: true },
+      portraitLabel: host.name + ', ' + host.role,
       d4: d[4], d5: d[5],
       hourCards: [cardOf(0), cardOf(1)],
       minuteCards: [cardOf(2), cardOf(3)],
@@ -514,7 +746,7 @@ class Component extends DCLogic {
       meridiem: h24 ? false : (now.getHours() < 12 ? 'AM' : 'PM'),
       meridiemStyle: {
         fontSize: Math.round(secSize * 0.6) + 'px', fontWeight: 500,
-        letterSpacing: '.18em', color: 'rgba(255,201,121,.75)', marginLeft: '6px'
+        letterSpacing: '.18em', color: 'rgba(var(--soft),.75)', marginLeft: '6px'
       },
       timeLabel: 'Current time ' + this.shortTime(now),
       clockRowStyle: {
@@ -528,8 +760,8 @@ class Component extends DCLogic {
       },
       dot: {
         display: 'block', width: Math.round(card * 0.11) + 'px', height: Math.round(card * 0.11) + 'px',
-        borderRadius: '50%', background: '#ffb547',
-        boxShadow: '0 0 10px rgba(255,154,31,.95), 0 0 28px rgba(255,154,31,.5)'
+        borderRadius: '50%', background: 'rgb(var(--hi))',
+        boxShadow: '0 0 10px rgba(var(--a),.95), 0 0 28px rgba(var(--a),.5)'
       },
       dotGap: Math.round(card * 0.2) + 'px',
       gap: Math.round(card * 0.13) + 'px',
@@ -539,14 +771,14 @@ class Component extends DCLogic {
       secStyle,
 
       // Header
-      logoStyle: { width: compact ? '44px' : '58px', height: 'auto', flex: 'none', filter: 'drop-shadow(0 0 10px rgba(255,154,31,.45))' },
+      logoStyle: { width: compact ? '44px' : '58px', height: 'auto', flex: 'none', filter: 'drop-shadow(0 0 10px rgba(var(--a),.45))' },
       orgStyle: {
         fontSize: (compact ? 10 : 13) + 'px', fontWeight: 700, letterSpacing: '.28em',
-        textTransform: 'uppercase', color: '#ffcf7a', textShadow: '0 0 12px rgba(255,154,31,.5)'
+        textTransform: 'uppercase', color: 'rgb(var(--soft))', textShadow: '0 0 12px rgba(var(--a),.5)'
       },
       mottoStyle: {
         fontSize: (compact ? 8.5 : 10) + 'px', fontWeight: 300, letterSpacing: '.3em',
-        textTransform: 'uppercase', color: 'rgba(255,201,121,.65)'
+        textTransform: 'uppercase', color: 'rgba(var(--soft),.65)'
       },
 
       // Miss Minutes
@@ -556,14 +788,14 @@ class Component extends DCLogic {
       mmStyle: {
         width: mmW + 'px', height: mascotH + 'px', flex: 'none', overflow: 'visible',
         animation: 'bob 3.2s ease-in-out infinite',
-        filter: 'drop-shadow(0 8px 18px rgba(255,120,20,.35))'
+        filter: 'drop-shadow(0 8px 18px rgba(var(--a),.35))'
       },
       speaker: talk.speaker,
       line: talk.line,
       bubbleStyle: {
         position: 'relative', maxWidth: Math.round(Math.min(460, avail - mmW - 24)) + 'px',
         minWidth: 0, padding: compact ? '8px 12px' : '12px 16px', borderRadius: '14px',
-        background: 'linear-gradient(180deg, rgba(58,34,16,.92), rgba(30,16,6,.92))',
+        background: 'linear-gradient(180deg, rgba(var(--ink),.92), rgba(var(--ink2),.92))',
         border: `1px solid ${talk.color}88`,
         boxShadow: `0 0 0 1px rgba(0,0,0,.4) inset, 0 10px 30px -12px ${talk.color}99`,
         fontSize: (compact ? 11 : 13.5) + 'px', lineHeight: 1.45, color: TVA.cream,
@@ -572,7 +804,7 @@ class Component extends DCLogic {
       },
       bubbleTailStyle: {
         position: 'absolute', left: '-7px', top: '50%', width: '12px', height: '12px',
-        background: 'rgba(48,27,12,.95)', borderLeft: `1px solid ${talk.color}88`, borderBottom: `1px solid ${talk.color}88`,
+        background: 'rgba(var(--ink),.95)', borderLeft: `1px solid ${talk.color}88`, borderBottom: `1px solid ${talk.color}88`,
         transform: 'translateY(-50%) rotate(45deg)'
       },
       speakerStyle: {
@@ -585,25 +817,25 @@ class Component extends DCLogic {
       labelSize,
       trackStyle: {
         position: 'relative', width: '100%', height: '3px', borderRadius: '3px',
-        background: 'rgba(255,154,31,.14)', overflow: 'visible'
+        background: 'rgba(var(--a),.14)', overflow: 'visible'
       },
       progressStyle: {
         width: pct.toFixed(2) + '%', height: '100%', borderRadius: '3px',
-        background: nexus ? `linear-gradient(90deg,rgba(255,90,60,.4),${TVA.alert})` : 'linear-gradient(90deg,rgba(255,154,31,.35),#ffb547)',
-        boxShadow: nexus ? '0 0 14px rgba(255,90,60,.9)' : '0 0 12px rgba(255,154,31,.8)'
+        background: nexus ? `linear-gradient(90deg,rgba(255,90,60,.4),${TVA.alert})` : 'linear-gradient(90deg,rgba(var(--a),.35),rgb(var(--hi)))',
+        boxShadow: nexus ? '0 0 14px rgba(255,90,60,.9)' : '0 0 12px rgba(var(--a),.8)'
       },
       nodes: [0, 25, 50, 75, 100].map((p) => ({
         style: {
           position: 'absolute', left: p + '%', top: '50%', width: '7px', height: '7px',
           borderRadius: '50%', transform: 'translate(-50%,-50%)',
-          background: pct >= p ? '#ffb547' : TVA.ink,
-          border: '1px solid rgba(255,154,31,.7)'
+          background: pct >= p ? 'rgb(var(--hi))' : 'rgb(var(--ink))',
+          border: '1px solid rgba(var(--a),.7)'
         }
       })),
       nexusText: nexus ? 'Nexus event · branch pruned' : 'Next reset in ' + pad2(60 - sec) + 's',
       nexusStyle: {
         whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-        color: nexus ? TVA.alert : 'rgba(255,201,121,.55)',
+        color: nexus ? TVA.alert : 'rgba(var(--soft),.55)',
         textShadow: nexus ? '0 0 10px rgba(255,90,60,.8)' : 'none'
       },
 
