@@ -377,7 +377,7 @@
 
   <footer style="position:absolute;left:0;right:0;bottom:clamp(8px,2vh,20px);display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 16px;text-align:center;font-weight:300;color:rgba(var(--soft),.55);">
     <span style="font-size:clamp(10px,1.5vw,12px);letter-spacing:.32em;text-transform:uppercase;">Stephen Abueva &nbsp;|&nbsp; {{ year }}</span>
-    <small style="font-size:clamp(8.5px,1.1vw,10px);letter-spacing:.06em;line-height:1.4;color:rgba(var(--soft),.42);max-width:720px;">&copy; {{ year }} Stephen Abueva. All rights reserved. Loki, Miss Minutes, the TVA and all related characters, names and images belong to their rightful owners. Unofficial fan project, not affiliated with or endorsed by Marvel or Disney.</small>
+    <small style="font-size:5px;letter-spacing:.06em;line-height:1.4;color:rgba(var(--soft),.42);max-width:720px;">&copy; {{ year }} All rights reserved. Loki, Miss Minutes, the TVA and all related characters, names and images belong to their rightful owners. Unofficial fan project, not affiliated with or endorsed by Marvel or Disney.</small>
   </footer>
 </div>
 
@@ -611,7 +611,7 @@ class Component extends DCLogic {
     const secUnits = showSeconds && !stack ? 1.05 : 0;
     const budget = avail / (unitsRow + secUnits);
 
-    const fixed = (avail < 520 ? 150 : 130) /* header + footer with rights notice */ + (showDate ? 34 : 0) + 46 /* timeline */ + (stack && showSeconds ? 90 : 0);
+    const fixed = 120 /* header + footer with rights notice */ + (showDate ? 34 : 0) + 46 /* timeline */ + (stack && showSeconds ? 90 : 0);
     const fit = (mascotH, castH) => (h - fixed - (mascotH ? mascotH + 18 : 0) - (castH ? castH + 18 : 0)) / 1.34;
 
     // The cast wraps onto as many rows as the width needs.
